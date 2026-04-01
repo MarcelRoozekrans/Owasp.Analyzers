@@ -12,12 +12,23 @@
           WorkingDirectory="$(MSBuildProjectDirectory)"
           ConsoleToMSBuild="true"
           EchoOff="true"
+          IgnoreExitCode="true"
           StandardOutputImportance="low">
       <Output TaskParameter="ConsoleOutput" PropertyName="_OwaspA06Output" />
     </Exec>
 
+    <Exec Command="dotnet list package --deprecated --include-transitive 2&gt;&amp;1"
+          WorkingDirectory="$(MSBuildProjectDirectory)"
+          ConsoleToMSBuild="true"
+          EchoOff="true"
+          IgnoreExitCode="true"
+          StandardOutputImportance="low">
+      <Output TaskParameter="ConsoleOutput" PropertyName="_OwaspA06DeprecatedOutput" />
+    </Exec>
+
     <ItemGroup>
       <_VulnerableLines Include="$(_OwaspA06Output.Split('%0A'))" />
+      <_DeprecatedLines Include="$(_OwaspA06DeprecatedOutput.Split('%0A'))" />
     </ItemGroup>
 
     <Warning
@@ -26,7 +37,7 @@
       Code="OWASP-A06-001" />
 
     <Warning
-      Condition="$([System.String]::Copy('%(_VulnerableLines.Identity)').Contains('deprecated'))"
+      Condition="$([System.String]::Copy('%(_DeprecatedLines.Identity)').Contains('deprecated'))"
       Text="OWASP-A06-002: Deprecated NuGet packages detected. Run 'dotnet list package --deprecated' for details."
       Code="OWASP-A06-002" />
 
