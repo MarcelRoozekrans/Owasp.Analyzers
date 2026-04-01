@@ -27,7 +27,7 @@ public sealed class LoggingFailureAnalyzer : DiagnosticAnalyzer
 
     private static readonly DiagnosticDescriptor Rule004 = new("OWASPA09004",
         "Sensitive data in log message",
-        "String literal passed to a logging method contains a sensitive keyword — avoid logging passwords, tokens, or other secrets",
+        "String literal passed to a logging method contains sensitive keyword '{0}' — avoid logging passwords, tokens, or secrets",
         "OWASP.A09", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     private static readonly ImmutableHashSet<string> LoggingMethodNames = ImmutableHashSet.Create(
@@ -114,7 +114,8 @@ public sealed class LoggingFailureAnalyzer : DiagnosticAnalyzer
                 {
                     if (value.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0)
                     {
-                        context.ReportDiagnostic(Diagnostic.Create(Rule004, literal.GetLocation()));
+                        var matchedKeyword = keyword;
+                        context.ReportDiagnostic(Diagnostic.Create(Rule004, literal.GetLocation(), matchedKeyword));
                         return;
                     }
                 }

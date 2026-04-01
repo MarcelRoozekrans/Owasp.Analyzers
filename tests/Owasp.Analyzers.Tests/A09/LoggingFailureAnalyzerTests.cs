@@ -178,4 +178,22 @@ public class LoggingFailureAnalyzerTests
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
         Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA09004");
     }
+
+    [Fact]
+    public async Task TaintedInputToLog_ShouldDiagnosticA09003()
+    {
+        var code = """
+            public class Controller
+            {
+                private HttpRequest Request { get; set; } = null!;
+                public void Action()
+                {
+                    var userInput = Request.Query["search"];
+                    System.Console.WriteLine(userInput);
+                }
+            }
+            """;
+        var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
+        AnalyzerTestHelper.AssertSingleDiagnostic(diagnostics, "OWASPA09003");
+    }
 }

@@ -106,14 +106,23 @@ internal sealed class TaintEngine
     private void AnalyzeInvocation(InvocationExpressionSyntax invocation)
     {
         var symbol = _model.GetSymbolInfo(invocation).Symbol;
-        if (symbol == null) return;
 
         var args = invocation.ArgumentList.Arguments;
         for (var i = 0; i < args.Count; i++)
         {
             if (!IsTainted(args[i].Expression)) continue;
 
-            var sinkKind = TaintSinks.GetSinkKind(symbol, i);
+            TaintSinks.SinkKind? sinkKind = null;
+            if (symbol != null)
+            {
+                sinkKind = TaintSinks.GetSinkKind(symbol, i);
+            }
+            else
+            {
+                // Syntax-only fallback when semantic resolution is unavailable
+                sinkKind = TaintSinks.GetSinkKindByName(invocation, i);
+            }
+
             if (sinkKind.HasValue)
             {
                 SinkHits.Add(sinkKind.Value);

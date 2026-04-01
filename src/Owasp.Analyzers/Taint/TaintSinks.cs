@@ -1,4 +1,5 @@
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Owasp.Analyzers.Taint;
 
@@ -73,6 +74,8 @@ internal static class TaintSinks
         new("ILogger", "LogError", 0, SinkKind.LogInjection),
         new("ILogger", "LogDebug", 0, SinkKind.LogInjection),
         new("ILogger", "Log", 1, SinkKind.LogInjection),
+        new("Console", "WriteLine", 0, SinkKind.LogInjection),
+        new("Console", "Write", 0, SinkKind.LogInjection),
     ];
 
     // SinkIndex declared after AllSinks to ensure correct static initialization order.
@@ -111,6 +114,55 @@ internal static class TaintSinks
         foreach (var sink in candidates)
         {
             if (sink.TaintedArgumentIndex == -1 || sink.TaintedArgumentIndex == argumentIndex)
+                return sink.Kind;
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Syntax-only fallback: matches by method name and optional receiver name when
+    /// semantic symbol resolution is unavailable (e.g., missing references in tests).
+    /// </summary>
+    public static SinkKind? GetSinkKindByName(InvocationExpressionSyntax invocation, int argumentIndex = 0)
+    {
+        string? typeName = null;
+        string? memberName = null;
+
+        switch (invocation.Expression)
+        {
+            case MemberAccessExpressionSyntax ma:
+                memberName = ma.Name.Identifier.Text;
+                // Try to infer receiver type name from the last identifier of the receiver
+                typeName = ma.Expression switch
+                {
+                    IdentifierNameSyntax id => id.Identifier.Text,
+                    MemberAccessExpressionSyntax inner => inner.Name.Identifier.Text,
+                    _ => null
+                };
+                break;
+            case IdentifierNameSyntax id:
+                memberName = id.Identifier.Text;
+                break;
+        }
+
+        if (memberName == null) return null;
+
+        // Try exact (typeName, memberName) match first
+        if (typeName != null && SinkIndex.TryGetValue((typeName, memberName), out var exactCandidates))
+        {
+            foreach (var sink in exactCandidates)
+            {
+                if (sink.TaintedArgumentIndex == -1 || sink.TaintedArgumentIndex == argumentIndex)
+                    return sink.Kind;
+            }
+        }
+
+        // Fall back to member name only across all sinks
+        foreach (var sink in AllSinks)
+        {
+            if (sink.MemberName == memberName &&
+                (sink.TaintedArgumentIndex == -1 || sink.TaintedArgumentIndex == argumentIndex))
                 return sink.Kind;
         }
 
