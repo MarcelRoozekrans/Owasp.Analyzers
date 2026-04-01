@@ -50,15 +50,17 @@ internal static class TaintSources
     /// Returns true if the member access is reading from HttpContext.Request.*
     /// (e.g., Request.Query["id"], Request.Form["name"]).
     /// </summary>
-    public static bool IsRequestAccess(MemberAccessExpressionSyntax memberAccess, SemanticModel model)
+    public static bool IsRequestAccess(MemberAccessExpressionSyntax memberAccess)
     {
         var name = memberAccess.Name.Identifier.Text;
         if (!RequestProperties.Contains(name))
             return false;
 
-        // Check the receiver is Request or HttpContext.Request
+        // Syntax-only check: receiver must be "Request" or end with ".Request"
+        // Full semantic type resolution (confirming HttpRequest type) is deferred to v2.
         var receiver = memberAccess.Expression.ToString();
-        return receiver.EndsWith("Request", StringComparison.Ordinal);
+        return receiver == "Request" ||
+               receiver.EndsWith(".Request", StringComparison.Ordinal);
     }
 
     private static bool IsControllerAction(IMethodSymbol method)

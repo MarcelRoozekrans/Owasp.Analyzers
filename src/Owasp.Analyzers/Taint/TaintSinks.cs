@@ -15,17 +15,39 @@ internal static class TaintSinks
         LdapInjection,
         XPathInjection,
         Xss,
-        DynamicLinq,
+        DynamicLinq,  // placeholder — no sink entries yet; added when Dynamic LINQ rule is implemented
         Ssrf,
         LogInjection
     }
 
     private record SinkDefinition(string TypeName, string MemberName, int TaintedArgumentIndex, SinkKind Kind);
 
-    private static readonly SinkDefinition[] Sinks =
+    // NOTE: Matching is by simple type name only (no namespace). "File" could collide with
+    // user-defined types named File. This is an accepted v1 limitation — semantic type
+    // resolution is deferred to v2.
+    private static readonly Dictionary<(string TypeName, string MemberName), List<SinkDefinition>> SinkIndex =
+        BuildIndex();
+
+    private static Dictionary<(string, string), List<SinkDefinition>> BuildIndex()
+    {
+        var index = new Dictionary<(string, string), List<SinkDefinition>>();
+        foreach (var sink in AllSinks)
+        {
+            var key = (sink.TypeName, sink.MemberName);
+            if (!index.TryGetValue(key, out var list))
+            {
+                list = [];
+                index[key] = list;
+            }
+            list.Add(sink);
+        }
+        return index;
+    }
+
+    private static readonly SinkDefinition[] AllSinks =
     [
         // A03 — SQL
-        new("SqlCommand", "CommandText", -1, SinkKind.SqlInjection),          // property assignment
+        new("SqlCommand", "CommandText", -1, SinkKind.SqlInjection),
         new("NpgsqlCommand", "CommandText", -1, SinkKind.SqlInjection),
         new("MySqlCommand", "CommandText", -1, SinkKind.SqlInjection),
 
@@ -71,22 +93,22 @@ internal static class TaintSinks
     ];
 
     /// <summary>
-    /// Checks if the given member access + argument index constitutes a taint sink.
+    /// Checks if the given member symbol + argument index constitutes a taint sink.
     /// Returns the SinkKind if it matches, null otherwise.
+    /// Lookup is O(1) via pre-built index.
     /// </summary>
     public static SinkKind? GetSinkKind(ISymbol memberSymbol, int argumentIndex = 0)
     {
         var typeName = memberSymbol.ContainingType?.Name ?? string.Empty;
         var memberName = memberSymbol.Name;
 
-        foreach (var sink in Sinks)
+        if (!SinkIndex.TryGetValue((typeName, memberName), out var candidates))
+            return null;
+
+        foreach (var sink in candidates)
         {
-            if (sink.TypeName == typeName && sink.MemberName == memberName)
-            {
-                // -1 means property assignment (any use is a sink)
-                if (sink.TaintedArgumentIndex == -1 || sink.TaintedArgumentIndex == argumentIndex)
-                    return sink.Kind;
-            }
+            if (sink.TaintedArgumentIndex == -1 || sink.TaintedArgumentIndex == argumentIndex)
+                return sink.Kind;
         }
 
         return null;
