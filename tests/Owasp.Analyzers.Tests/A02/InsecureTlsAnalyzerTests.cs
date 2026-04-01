@@ -103,6 +103,23 @@ public class InsecureTlsAnalyzerTests
     }
 
     [Fact]
+    public async Task CombinedTlsFlags_ShouldDiagnosticA02005()
+    {
+        var code = """
+            public class Test
+            {
+                public void M()
+                {
+                    System.Net.ServicePointManager.SecurityProtocol =
+                        System.Net.SecurityProtocolType.Tls12 | System.Net.SecurityProtocolType.Tls;
+                }
+            }
+            """;
+        var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA02005");
+    }
+
+    [Fact]
     public async Task HttpSchemeOnly_ShouldNotDiagnostic()
     {
         var code = """

@@ -42,13 +42,16 @@ public sealed class InsecureTlsAnalyzer : DiagnosticAnalyzer
 
         if (leftText.Contains("SecurityProtocol"))
         {
-            if (rightText.Contains("Ssl3") ||
-                (rightText.Contains("Tls") && !rightText.Contains("Tls12") && !rightText.Contains("Tls13")))
+            // Check for legacy protocols independently — combined flags like Tls12|Tls are still dangerous
+            var hasSsl3 = rightText.Contains("Ssl3");
+            // Match bare "Tls" not followed by a digit (to distinguish SecurityProtocolType.Tls from Tls12/Tls13)
+            var hasBareOldTls = System.Text.RegularExpressions.Regex.IsMatch(rightText, @"\bTls\b(?!\d)");
+            if (hasSsl3 || hasBareOldTls)
                 context.ReportDiagnostic(Diagnostic.Create(Rule005, assignment.GetLocation()));
         }
 
         if (leftText.Contains("ServerCertificateValidationCallback") &&
-            rightText.Contains("true") && !rightText.Contains("false"))
+            System.Text.RegularExpressions.Regex.IsMatch(rightText, @"=>\s*true\b"))
             context.ReportDiagnostic(Diagnostic.Create(Rule006, assignment.GetLocation()));
     }
 

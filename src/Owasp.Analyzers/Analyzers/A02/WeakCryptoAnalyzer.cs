@@ -22,7 +22,7 @@ public sealed class WeakCryptoAnalyzer : DiagnosticAnalyzer
     private static readonly DiagnosticDescriptor Rule003 = new("OWASPA02003",
         "System.Random is not cryptographically secure",
         "Use RandomNumberGenerator.GetBytes() instead of System.Random for security-sensitive operations",
-        "OWASP.A02", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+        "OWASP.A02", DiagnosticSeverity.Info, isEnabledByDefault: true);
 
     private static readonly HashSet<string> WeakAlgorithms = new(StringComparer.Ordinal)
     {

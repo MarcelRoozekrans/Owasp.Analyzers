@@ -16,9 +16,9 @@ public sealed class HardcodedKeyAnalyzer : DiagnosticAnalyzer
         "Variable '{0}' appears to contain a hardcoded cryptographic key or IV",
         "OWASP.A02", DiagnosticSeverity.Error, isEnabledByDefault: true);
 
-    private static readonly HashSet<string> KeyIndicators = new(StringComparer.OrdinalIgnoreCase)
+    private static readonly HashSet<string> LongKeyIndicators = new(StringComparer.OrdinalIgnoreCase)
     {
-        "key", "iv", "secret", "password", "salt", "nonce", "hmackey"
+        "key", "secret", "password", "salt", "nonce", "hmackey"
     };
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule];
@@ -49,8 +49,26 @@ public sealed class HardcodedKeyAnalyzer : DiagnosticAnalyzer
     {
         if (initializer is not (ArrayCreationExpressionSyntax or ImplicitArrayCreationExpressionSyntax))
             return;
+
         var nameLower = name.ToLowerInvariant();
-        if (KeyIndicators.Any(k => nameLower.Contains(k)))
+        // Use word-boundary matching for short indicators like "iv" to avoid false positives
+        // on words like "archive", "positive", "activeSession"
+        if (ContainsKeyIndicator(nameLower))
             context.ReportDiagnostic(Diagnostic.Create(Rule, initializer!.GetLocation(), name));
+    }
+
+    private static bool ContainsKeyIndicator(string nameLower)
+    {
+        // For "iv" require it to appear as a whole word segment (bounded by start/end or non-letter)
+        if (System.Text.RegularExpressions.Regex.IsMatch(nameLower, @"(^|[^a-z])iv($|[^a-z])"))
+            return true;
+
+        // For longer indicators, substring match is safe enough
+        foreach (var indicator in LongKeyIndicators)
+        {
+            if (nameLower.Contains(indicator))
+                return true;
+        }
+        return false;
     }
 }
