@@ -1,6 +1,9 @@
 Add-Type -AssemblyName System.Drawing
 Add-Type -AssemblyName System.Windows.Forms
 
+# Note: This script uses System.Drawing (GDI+) and requires Windows.
+# The generated logo.png is committed to the repository; re-run only when updating the icon design.
+
 $width = 128
 $height = 128
 $bmp = New-Object System.Drawing.Bitmap($width, $height)
@@ -32,6 +35,6 @@ $g.DrawLines($pen, @(
 ))
 
 $g.Dispose()
-$bmp.Save("assets\logo.png", [System.Drawing.Imaging.ImageFormat]::Png)
+$bmp.Save((Join-Path $PSScriptRoot "logo.png"), [System.Drawing.Imaging.ImageFormat]::Png)
 $bmp.Dispose()
 Write-Host "Done: assets\logo.png"
