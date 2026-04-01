@@ -2,16 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
     <NoWarn>RS2008</NoWarn>
     <RootNamespace>Owasp.Analyzers</RootNamespace>
-
-    <!-- NuGet metadata -->
     <PackageId>Owasp.Analyzers</PackageId>
-    <Version>1.0.0</Version>
-    <Authors>Marcel Roozekrans</Authors>
     <Description>Roslyn analyzers covering the OWASP Top 10 2021 for C#/.NET projects.</Description>
     <PackageTags>roslyn;analyzer;owasp;security</PackageTags>
     <IncludeBuildOutput>false</IncludeBuildOutput>
@@ -28,10 +22,12 @@
     </AssemblyAttribute>
   </ItemGroup>
 
-  <!-- Bundle the analyzer assembly and MSBuild targets into the NuGet package -->
+  <!-- Bundle the analyzer assembly, MSBuild targets, icon, and readme into the NuGet package -->
   <ItemGroup>
     <None Include="build\Owasp.Analyzers.targets" Pack="true" PackagePath="build\" />
     <None Include="$(OutputPath)$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="..\..\assets\logo.png" Pack="true" PackagePath="\" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>

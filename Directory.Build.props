@@ -1,0 +1,13 @@
+<Project>
+  <PropertyGroup>
+    <Authors>Marcel Roozekrans</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/MarcelRoozekrans/Owasp.Analyzers</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/MarcelRoozekrans/Owasp.Analyzers</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageIcon>logo.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+</Project>
