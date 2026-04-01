@@ -49,8 +49,8 @@ public sealed class AuthFailureAnalyzer : DiagnosticAnalyzer
     {
         var memberAccess = (MemberAccessExpressionSyntax)context.Node;
 
-        // Detect SecurityAlgorithms.None
-        if (memberAccess.Expression.ToString() == "SecurityAlgorithms" &&
+        // Detect SecurityAlgorithms.None (also matches fully-qualified forms)
+        if (memberAccess.Expression.ToString().EndsWith("SecurityAlgorithms", StringComparison.Ordinal) &&
             memberAccess.Name.Identifier.Text == "None")
         {
             context.ReportDiagnostic(Diagnostic.Create(Rule001, memberAccess.GetLocation()));
@@ -76,6 +76,7 @@ public sealed class AuthFailureAnalyzer : DiagnosticAnalyzer
         SyntaxNodeAnalysisContext context,
         ObjectCreationExpressionSyntax creation)
     {
+        // Scope: only object-initializer syntax is checked; property assignments via statements are out of scope for v1.
         if (creation.Initializer == null) return;
 
         var props = GetInitializerProperties(creation.Initializer);

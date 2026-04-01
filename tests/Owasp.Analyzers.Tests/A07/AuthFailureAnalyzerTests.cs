@@ -77,6 +77,41 @@ public class AuthFailureAnalyzerTests
     }
 
     [Fact]
+    public async Task SecurityAlgorithmsNone_FullyQualified_ShouldDiagnosticA07001()
+    {
+        var code = """
+            public class TokenService
+            {
+                public void CreateToken()
+                {
+                    var alg = Microsoft.IdentityModel.Tokens.SecurityAlgorithms.None;
+                }
+            }
+            """;
+        var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA07001");
+    }
+
+    [Fact]
+    public async Task ValidateIssuerSigningKeyTrue_ShouldNotDiagnosticA07003()
+    {
+        var code = """
+            public class TokenValidator
+            {
+                public void Validate()
+                {
+                    var parameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true
+                    };
+                }
+            }
+            """;
+        var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
+        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA07003");
+    }
+
+    [Fact]
     public async Task ValidateIssuerSigningKeyFalse_ShouldDiagnosticA07003()
     {
         var code = """
