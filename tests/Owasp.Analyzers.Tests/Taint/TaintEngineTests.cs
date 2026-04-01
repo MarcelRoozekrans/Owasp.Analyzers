@@ -75,6 +75,37 @@ public class TaintEngineTests
         Assert.Contains("sql", taintedLocals);
     }
 
+    [Fact]
+    public void TaintDoesNotLeakAcrossMethods()
+    {
+        var code = """
+            public class TestController
+            {
+                private TestRequest Request { get; set; } = null!;
+                public void MethodA()
+                {
+                    var id = Request.Query["id"];
+                }
+                public void MethodB()
+                {
+                    var id = "hardcoded";
+                    var sql = "SELECT * FROM users WHERE id=" + id;
+                }
+            }
+            public class TestRequest { public TestQuery Query { get; set; } = null!; }
+            public class TestQuery { public string this[string key] => key; }
+            """;
+        var tree = Microsoft.CodeAnalysis.CSharp.CSharpSyntaxTree.ParseText(code);
+        var compilation = Microsoft.CodeAnalysis.CSharp.CSharpCompilation.Create("Test")
+            .AddReferences(Microsoft.CodeAnalysis.MetadataReference.CreateFromFile(typeof(object).Assembly.Location))
+            .AddSyntaxTrees(tree);
+        var model = compilation.GetSemanticModel(tree);
+        var engine = new Owasp.Analyzers.Taint.TaintEngine(model);
+        engine.Analyze(tree.GetRoot());
+        Assert.Empty(engine.SinkHits); // id in MethodB is not tainted
+        Assert.DoesNotContain("sql", engine.TaintedLocals); // sql in MethodB is not tainted
+    }
+
     private static (HashSet<string> taintedLocals, List<TaintSinks.SinkKind> sinkHits) RunTaintEngine(string snippet)
     {
         var code = $$"""

@@ -32,8 +32,15 @@ internal sealed class TaintEngine
 
     public void Analyze(SyntaxNode root)
     {
-        foreach (var statement in root.DescendantNodes().OfType<StatementSyntax>())
-            AnalyzeStatement(statement);
+        // Process each method body independently to prevent cross-method taint leakage.
+        // For each method, reset TaintedLocals and walk its body statements recursively.
+        foreach (var method in root.DescendantNodes().OfType<MethodDeclarationSyntax>())
+        {
+            if (method.Body == null) continue;
+            TaintedLocals.Clear();
+            foreach (var statement in method.Body.DescendantNodes().OfType<StatementSyntax>())
+                AnalyzeStatement(statement);
+        }
     }
 
     private void AnalyzeStatement(StatementSyntax statement)

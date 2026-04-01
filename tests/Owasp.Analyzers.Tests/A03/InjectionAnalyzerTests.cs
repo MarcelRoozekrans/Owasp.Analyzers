@@ -116,6 +116,81 @@ public class InjectionAnalyzerTests
     }
 
     [Fact]
+    public async Task LdapInjection_ShouldDiagnosticA03004()
+    {
+        var code = """
+            public class DirectorySearcher
+            {
+                public string Filter { get; set; } = "";
+            }
+            public class TestController
+            {
+                private TestRequest Request { get; set; } = null!;
+                public void Action()
+                {
+                    var username = Request.Query["user"];
+                    var searcher = new DirectorySearcher();
+                    searcher.Filter = "(&(objectClass=user)(sAMAccountName=" + username + "))";
+                }
+            }
+            public class TestRequest { public TestQuery Query { get; set; } = null!; }
+            public class TestQuery { public string this[string key] => key; }
+            """;
+        var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA03004");
+    }
+
+    [Fact]
+    public async Task XssInjection_ShouldDiagnosticA03006()
+    {
+        var code = """
+            public class HttpResponse
+            {
+                public void Write(string value) { }
+            }
+            public class TestController
+            {
+                private TestRequest Request { get; set; } = null!;
+                private HttpResponse Response { get; set; } = null!;
+                public void Action()
+                {
+                    var name = Request.Query["name"];
+                    Response.Write(name);
+                }
+            }
+            public class TestRequest { public TestQuery Query { get; set; } = null!; }
+            public class TestQuery { public string this[string key] => key; }
+            """;
+        var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA03006");
+    }
+
+    [Fact]
+    public async Task XPathInjection_ShouldDiagnosticA03005()
+    {
+        var code = """
+            public class XPathNavigator
+            {
+                public object Select(string xpath) => null!;
+            }
+            public class TestController
+            {
+                private TestRequest Request { get; set; } = null!;
+                public void Action()
+                {
+                    var id = Request.Query["id"];
+                    var nav = new XPathNavigator();
+                    var result = nav.Select("/users/user[@id='" + id + "']");
+                }
+            }
+            public class TestRequest { public TestQuery Query { get; set; } = null!; }
+            public class TestQuery { public string this[string key] => key; }
+            """;
+        var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA03005");
+    }
+
+    [Fact]
     public async Task OsCommandInjection_ShouldDiagnosticA03002()
     {
         var code = """
