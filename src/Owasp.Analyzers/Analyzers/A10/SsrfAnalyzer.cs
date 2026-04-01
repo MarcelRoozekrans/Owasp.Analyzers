@@ -20,6 +20,8 @@ public sealed class SsrfAnalyzer : DiagnosticAnalyzer
         "Tainted user input flows into WebClient or WebRequest URL — validate or allowlist the URL before use",
         "OWASP.A10", DiagnosticSeverity.Error, isEnabledByDefault: true);
 
+    // Rule003 is a linter-style rule: it fires unconditionally on AllowAutoRedirect = true assignments
+    // without taint-flow context. Warning (not Error) severity allows teams to suppress where legitimate.
     private static readonly DiagnosticDescriptor Rule003 = new("OWASPA10003",
         "AllowAutoRedirect enabled",
         "AllowAutoRedirect is set to true — this can allow attackers to redirect requests to internal services",
@@ -78,7 +80,8 @@ public sealed class SsrfAnalyzer : DiagnosticAnalyzer
                 return Rule002;
         }
 
-        // Default to Rule001 if we can't determine
+        // Fallback to Rule001: covers HttpClient.SendAsync hits (which use Rule001) and any
+        // case where the invocation expression cannot be resolved to a known sink method.
         return Rule001;
     }
 

@@ -78,6 +78,43 @@ public class SsrfAnalyzerTests
     }
 
     [Fact]
+    public async Task TaintedUrlToPostAsync_ShouldDiagnosticA10001()
+    {
+        var code = """
+            public class Controller
+            {
+                private HttpRequest Request { get; set; } = null!;
+                public void Action()
+                {
+                    var url = Request.Query["url"];
+                    var client = new HttpClient();
+                    client.PostAsync(url, null);
+                }
+            }
+            """;
+        var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA10001");
+    }
+
+    [Fact]
+    public async Task TaintedUrlToDownloadString_ShouldDiagnosticA10002()
+    {
+        var code = """
+            public class Controller
+            {
+                private HttpRequest Request { get; set; } = null!;
+                public void Action()
+                {
+                    var url = Request.Query["url"];
+                    new WebClient().DownloadString(url);
+                }
+            }
+            """;
+        var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA10002");
+    }
+
+    [Fact]
     public async Task AllowAutoRedirectFalse_ShouldNotDiagnosticA10003()
     {
         var code = """
