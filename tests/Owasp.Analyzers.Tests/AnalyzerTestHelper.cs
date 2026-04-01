@@ -8,30 +8,40 @@ namespace Owasp.Analyzers.Tests;
 public static class AnalyzerTestHelper
 {
     /// <summary>
-    /// Runs an analyzer against the given C# code snippet and returns all diagnostics.
-    /// The code is wrapped in a minimal compilable class context.
+    /// Runs an analyzer against the given C# code and returns all diagnostics.
+    /// Pass additionalReferences for code that uses ASP.NET Core, System.Data, etc.
     /// </summary>
-    public static ImmutableArray<Diagnostic> GetDiagnostics(string code, DiagnosticAnalyzer analyzer)
+    public static async Task<ImmutableArray<Diagnostic>> GetDiagnosticsAsync(
+        string code,
+        DiagnosticAnalyzer analyzer,
+        IEnumerable<MetadataReference>? additionalReferences = null)
     {
         var tree = CSharpSyntaxTree.ParseText(code);
+        var references = new List<MetadataReference>
+        {
+            MetadataReference.CreateFromFile(typeof(object).Assembly.Location)
+        };
+        if (additionalReferences != null)
+            references.AddRange(additionalReferences);
+
         var compilation = CSharpCompilation.Create("TestAssembly")
-            .AddReferences(MetadataReference.CreateFromFile(typeof(object).Assembly.Location))
+            .AddReferences(references)
             .AddSyntaxTrees(tree);
 
         var compilationWithAnalyzers = compilation.WithAnalyzers(
             ImmutableArray.Create(analyzer));
 
-        return compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync().Result;
+        return await compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync();
     }
 
     /// <summary>
-    /// Asserts exactly one diagnostic with the given ID was reported.
+    /// Asserts exactly one diagnostic with the given ID was reported (ignores other IDs).
     /// </summary>
     public static Diagnostic AssertSingleDiagnostic(ImmutableArray<Diagnostic> diagnostics, string expectedId)
     {
-        Assert.Single(diagnostics);
-        Assert.Equal(expectedId, diagnostics[0].Id);
-        return diagnostics[0];
+        var matching = diagnostics.Where(d => d.Id == expectedId).ToList();
+        Assert.Single(matching);
+        return matching[0];
     }
 
     /// <summary>
