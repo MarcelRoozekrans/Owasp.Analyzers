@@ -60,21 +60,28 @@ internal sealed class TaintEngine
 
     private void AnalyzeExpressionStatement(ExpressionStatementSyntax expr)
     {
-        // Property sink: command.CommandText = tainted
         if (expr.Expression is AssignmentExpressionSyntax assignment && IsTainted(assignment.Right))
         {
-            if (assignment.Left is MemberAccessExpressionSyntax memberAccess)
+            switch (assignment.Left)
             {
-                var symbol = _model.GetSymbolInfo(memberAccess).Symbol;
-                if (symbol != null)
-                {
-                    var sinkKind = TaintSinks.GetSinkKind(symbol);
-                    if (sinkKind.HasValue)
+                // Local variable re-assignment: x = tainted
+                case IdentifierNameSyntax id:
+                    TaintedLocals.Add(id.Identifier.Text);
+                    break;
+
+                // Property sink: command.CommandText = tainted
+                case MemberAccessExpressionSyntax memberAccess:
+                    var symbol = _model.GetSymbolInfo(memberAccess).Symbol;
+                    if (symbol != null)
                     {
-                        SinkHits.Add(sinkKind.Value);
-                        SinkLocations.Add(assignment.GetLocation());
+                        var sinkKind = TaintSinks.GetSinkKind(symbol);
+                        if (sinkKind.HasValue)
+                        {
+                            SinkHits.Add(sinkKind.Value);
+                            SinkLocations.Add(assignment.GetLocation());
+                        }
                     }
-                }
+                    break;
             }
         }
 
@@ -85,13 +92,13 @@ internal sealed class TaintEngine
 
     private void AnalyzeInvocation(InvocationExpressionSyntax invocation)
     {
+        var symbol = _model.GetSymbolInfo(invocation).Symbol;
+        if (symbol == null) return;
+
         var args = invocation.ArgumentList.Arguments;
         for (var i = 0; i < args.Count; i++)
         {
             if (!IsTainted(args[i].Expression)) continue;
-
-            var symbol = _model.GetSymbolInfo(invocation).Symbol;
-            if (symbol == null) continue;
 
             var sinkKind = TaintSinks.GetSinkKind(symbol, i);
             if (sinkKind.HasValue)

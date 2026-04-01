@@ -7,62 +7,75 @@ namespace Owasp.Analyzers.Tests.Taint;
 public class TaintEngineTests
 {
     [Fact]
-    public async Task DirectAssignment_PropagatesTaint()
+    public void DirectAssignment_PropagatesTaint()
     {
         var code = """
             var query = Request.Query["id"];
             var x = query;
             """;
-        var (taintedLocals, _) = await RunTaintEngine(code);
+        var (taintedLocals, _) = RunTaintEngine(code);
         Assert.Contains("x", taintedLocals);
     }
 
     [Fact]
-    public async Task StringInterpolation_PropagatesTaint()
+    public void StringInterpolation_PropagatesTaint()
     {
         var code = """
             var id = Request.Query["id"];
             var sql = $"SELECT * FROM users WHERE id = {id}";
             """;
-        var (taintedLocals, _) = await RunTaintEngine(code);
+        var (taintedLocals, _) = RunTaintEngine(code);
         Assert.Contains("sql", taintedLocals);
     }
 
     [Fact]
-    public async Task StringConcatenation_PropagatesTaint()
+    public void StringConcatenation_PropagatesTaint()
     {
         var code = """
             var id = Request.Query["id"];
             var sql = "SELECT * FROM users WHERE id = " + id;
             """;
-        var (taintedLocals, _) = await RunTaintEngine(code);
+        var (taintedLocals, _) = RunTaintEngine(code);
         Assert.Contains("sql", taintedLocals);
     }
 
     [Fact]
-    public async Task HtmlEncode_ClearsTaint()
+    public void HtmlEncode_ClearsTaint()
     {
         var code = """
             var input = Request.Query["name"];
             var safe = System.Web.HttpUtility.HtmlEncode(input);
             """;
-        var (taintedLocals, _) = await RunTaintEngine(code);
+        var (taintedLocals, _) = RunTaintEngine(code);
         Assert.DoesNotContain("safe", taintedLocals);
     }
 
     [Fact]
-    public async Task UntaintedVariable_NotTainted()
+    public void UntaintedVariable_NotTainted()
     {
         var code = """
             var id = "hardcoded";
             var sql = "SELECT * FROM users WHERE id = " + id;
             """;
-        var (taintedLocals, _) = await RunTaintEngine(code);
+        var (taintedLocals, _) = RunTaintEngine(code);
         Assert.DoesNotContain("id", taintedLocals);
         Assert.DoesNotContain("sql", taintedLocals);
     }
 
-    private static async Task<(HashSet<string> taintedLocals, List<TaintSinks.SinkKind> sinkHits)> RunTaintEngine(string snippet)
+    [Fact]
+    public void ReAssignment_PropagatesTaint()
+    {
+        var code = """
+            string query;
+            query = Request.Query["id"];
+            var sql = "SELECT * FROM users WHERE id = " + query;
+            """;
+        var (taintedLocals, _) = RunTaintEngine(code);
+        Assert.Contains("query", taintedLocals);
+        Assert.Contains("sql", taintedLocals);
+    }
+
+    private static (HashSet<string> taintedLocals, List<TaintSinks.SinkKind> sinkHits) RunTaintEngine(string snippet)
     {
         var code = $$"""
             public class TestController
