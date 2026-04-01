@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Owasp.Analyzers/Owasp.Analyzers.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Owasp.Analyzers.Tests/Owasp.Analyzers.Tests.csproj" />
+  </Folder>
+</Solution>
