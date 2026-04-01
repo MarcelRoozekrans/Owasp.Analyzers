@@ -33,7 +33,7 @@ public sealed class UnsafeDeserializationAnalyzer : DiagnosticAnalyzer
         ["NetDataContractSerializer", "SoapFormatter", "LosFormatter", "ObjectStateFormatter"];
 
     private static readonly ImmutableArray<string> DangerousTypeNameHandlingValues =
-        ["TypeNameHandling.All", "TypeNameHandling.Auto", "TypeNameHandling.Objects", "TypeNameHandling.Arrays"];
+        ["All", "Auto", "Objects", "Arrays"];
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         [Rule001, Rule002, Rule003, Rule004];
@@ -79,9 +79,10 @@ public sealed class UnsafeDeserializationAnalyzer : DiagnosticAnalyzer
                     propertyName.Identifier.Text == "TypeNameHandling")
                 {
                     var value = assignment.Right.ToString();
+                    var rhsToken = value.Contains('.') ? value[(value.LastIndexOf('.') + 1)..] : value;
                     foreach (var dangerous in DangerousTypeNameHandlingValues)
                     {
-                        if (value.EndsWith(dangerous.Substring("TypeNameHandling.".Length), StringComparison.Ordinal))
+                        if (rhsToken.Equals(dangerous, StringComparison.Ordinal))
                         {
                             context.ReportDiagnostic(Diagnostic.Create(Rule003, assignment.GetLocation()));
                             break;
@@ -111,15 +112,15 @@ public sealed class UnsafeDeserializationAnalyzer : DiagnosticAnalyzer
     {
         var assignment = (AssignmentExpressionSyntax)context.Node;
 
-        // OWASPA08003 — standalone assignment to any LHS containing "TypeNameHandling"
+        // OWASPA08003 — standalone assignment to any LHS ending with "TypeNameHandling"
         var lhs = assignment.Left.ToString();
-        if (!lhs.Contains("TypeNameHandling")) return;
+        if (!lhs.EndsWith("TypeNameHandling", StringComparison.Ordinal)) return;
 
         var rhs = assignment.Right.ToString();
+        var rhsLastToken = rhs.Contains('.') ? rhs[(rhs.LastIndexOf('.') + 1)..] : rhs;
         foreach (var dangerous in DangerousTypeNameHandlingValues)
         {
-            if (rhs.EndsWith(dangerous, StringComparison.Ordinal) ||
-                rhs.EndsWith(dangerous.Substring("TypeNameHandling.".Length), StringComparison.Ordinal))
+            if (rhsLastToken.Equals(dangerous, StringComparison.Ordinal))
             {
                 context.ReportDiagnostic(Diagnostic.Create(Rule003, assignment.GetLocation()));
                 return;

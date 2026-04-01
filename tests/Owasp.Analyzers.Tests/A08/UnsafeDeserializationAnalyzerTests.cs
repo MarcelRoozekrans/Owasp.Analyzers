@@ -87,6 +87,38 @@ public class UnsafeDeserializationAnalyzerTests
     }
 
     [Fact]
+    public async Task LosFormatter_ShouldDiagnosticA08002()
+    {
+        var code = """
+            public class Deserializer
+            {
+                public void Deserialize()
+                {
+                    var formatter = new LosFormatter();
+                }
+            }
+            """;
+        var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA08002");
+    }
+
+    [Fact]
+    public async Task ObjectStateFormatter_ShouldDiagnosticA08002()
+    {
+        var code = """
+            public class Deserializer
+            {
+                public void Deserialize()
+                {
+                    var formatter = new ObjectStateFormatter();
+                }
+            }
+            """;
+        var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA08002");
+    }
+
+    [Fact]
     public async Task TypeNameHandlingAll_InInitializer_ShouldDiagnosticA08003()
     {
         var code = """
