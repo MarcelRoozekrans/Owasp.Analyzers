@@ -35,7 +35,7 @@ public sealed class HardcodedRoleAnalyzer : DiagnosticAnalyzer
     private static void AnalyzeAttribute(SyntaxNodeAnalysisContext context)
     {
         var attr = (AttributeSyntax)context.Node;
-        if (attr.Name.ToString() is not "Authorize") return;
+        if (attr.Name.ToString() is not ("Authorize" or "AuthorizeAttribute")) return;
 
         var rolesArg = attr.ArgumentList?.Arguments
             .FirstOrDefault(a => a.NameEquals?.Name.Identifier.Text == "Roles");

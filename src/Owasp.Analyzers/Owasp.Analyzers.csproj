@@ -5,6 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <NoWarn>RS2008</NoWarn>
     <RootNamespace>Owasp.Analyzers</RootNamespace>
 
     <!-- NuGet metadata -->

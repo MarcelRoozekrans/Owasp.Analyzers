@@ -32,9 +32,6 @@ public sealed class MissingAntiforgeryTokenAnalyzer : DiagnosticAnalyzer
     private static void Analyze(SyntaxNodeAnalysisContext context)
     {
         var method = (MethodDeclarationSyntax)context.Node;
-        var symbol = context.SemanticModel.GetDeclaredSymbol(method) as IMethodSymbol;
-        if (symbol == null) return;
-
         var syntaxAttrNames = method.AttributeLists
             .SelectMany(al => al.Attributes)
             .Select(a => a.Name.ToString())
@@ -45,6 +42,17 @@ public sealed class MissingAntiforgeryTokenAnalyzer : DiagnosticAnalyzer
         if (syntaxAttrNames.Any(n => n is "ValidateAntiForgeryToken" or "ValidateAntiForgeryTokenAttribute")) return;
         if (syntaxAttrNames.Any(n => n is "IgnoreAntiforgeryToken" or "IgnoreAntiforgeryTokenAttribute")) return;
 
-        context.ReportDiagnostic(Diagnostic.Create(Rule, method.Identifier.GetLocation(), symbol.Name));
+        // Also skip if the containing class has [AutoValidateAntiforgeryToken]
+        if (method.Parent is TypeDeclarationSyntax typeDecl)
+        {
+            var classAttrNames = typeDecl.AttributeLists
+                .SelectMany(al => al.Attributes)
+                .Select(a => a.Name.ToString())
+                .ToList();
+            if (classAttrNames.Any(n => n is "AutoValidateAntiforgeryToken" or "AutoValidateAntiforgeryTokenAttribute"))
+                return;
+        }
+
+        context.ReportDiagnostic(Diagnostic.Create(Rule, method.Identifier.GetLocation(), method.Identifier.Text));
     }
 }
