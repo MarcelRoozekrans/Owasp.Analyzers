@@ -14,7 +14,7 @@ public sealed class InsecureDesignAnalyzer : DiagnosticAnalyzer
         "Authentication endpoint '{0}' has no rate limiting — susceptible to brute force",
         "OWASP.A04", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
-    private static readonly HashSet<string> AuthIndicators = new(StringComparer.OrdinalIgnoreCase)
+    private static readonly HashSet<string> AuthIndicators = new()
         { "login", "signin", "authenticate", "token", "auth" };
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule002];

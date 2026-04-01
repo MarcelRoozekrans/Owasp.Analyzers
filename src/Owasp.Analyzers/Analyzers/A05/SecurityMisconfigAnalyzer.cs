@@ -107,7 +107,7 @@ public sealed class SecurityMisconfigAnalyzer : DiagnosticAnalyzer
         var leftText = assignment.Left.ToString();
 
         if ((leftText.Contains("IncludeErrorDetails") || leftText.Contains("IncludeErrorDetailPolicy")) &&
-            assignment.Right.ToString().Contains("true", StringComparison.OrdinalIgnoreCase))
+            assignment.Right.IsKind(SyntaxKind.TrueLiteralExpression))
         {
             context.ReportDiagnostic(Diagnostic.Create(Rule004, assignment.GetLocation()));
         }
@@ -121,7 +121,7 @@ public sealed class SecurityMisconfigAnalyzer : DiagnosticAnalyzer
         var local = (LocalDeclarationStatementSyntax)context.Node;
         foreach (var variable in local.Declaration.Variables)
         {
-            if (variable.Initializer?.Value is LiteralExpressionSyntax { RawKind: (int)SyntaxKind.StringLiteralExpression })
+            if (variable.Initializer?.Value is LiteralExpressionSyntax lit && lit.IsKind(SyntaxKind.StringLiteralExpression))
                 CheckForHardcodedCredential(context, variable.Identifier.Text,
                     variable.Initializer.Value, variable.Initializer.Value.GetLocation());
         }
@@ -132,12 +132,17 @@ public sealed class SecurityMisconfigAnalyzer : DiagnosticAnalyzer
         var field = (FieldDeclarationSyntax)context.Node;
         foreach (var variable in field.Declaration.Variables)
         {
-            if (variable.Initializer?.Value is LiteralExpressionSyntax { RawKind: (int)SyntaxKind.StringLiteralExpression })
+            if (variable.Initializer?.Value is LiteralExpressionSyntax lit && lit.IsKind(SyntaxKind.StringLiteralExpression))
                 CheckForHardcodedCredential(context, variable.Identifier.Text,
                     variable.Initializer.Value, variable.Initializer.Value.GetLocation());
         }
     }
 
+    /// <summary>
+    /// Checks for hardcoded credentials in variable/field initializers and assignments (OWASPA05006).
+    /// Detection scope: general credential variable names (password, passwd, pwd, credential, secret, apikey, api_key).
+    /// This is intentionally separate from OWASPA02004, which targets cryptographic key/IV byte[] literals.
+    /// </summary>
     private static void CheckForHardcodedCredential(SyntaxNodeAnalysisContext context,
         string name, ExpressionSyntax value, Location location)
     {

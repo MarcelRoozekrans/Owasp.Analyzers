@@ -36,6 +36,20 @@ public class InsecureDesignAnalyzerTests
     }
 
     [Fact]
+    public async Task LoginEndpoint_WithHttpGet_WithoutRateLimit_ShouldDiagnosticA04002()
+    {
+        var code = """
+            public class AuthController
+            {
+                [HttpGet]
+                public void Login() { }
+            }
+            """;
+        var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA04002");
+    }
+
+    [Fact]
     public async Task LoginEndpoint_WithHttpDelete_ShouldNotDiagnosticA04002()
     {
         var code = """
