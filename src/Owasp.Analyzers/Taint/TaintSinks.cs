@@ -25,25 +25,8 @@ internal static class TaintSinks
     // NOTE: Matching is by simple type name only (no namespace). "File" could collide with
     // user-defined types named File. This is an accepted v1 limitation — semantic type
     // resolution is deferred to v2.
-    private static readonly Dictionary<(string TypeName, string MemberName), List<SinkDefinition>> SinkIndex =
-        BuildIndex();
 
-    private static Dictionary<(string, string), List<SinkDefinition>> BuildIndex()
-    {
-        var index = new Dictionary<(string, string), List<SinkDefinition>>();
-        foreach (var sink in AllSinks)
-        {
-            var key = (sink.TypeName, sink.MemberName);
-            if (!index.TryGetValue(key, out var list))
-            {
-                list = [];
-                index[key] = list;
-            }
-            list.Add(sink);
-        }
-        return index;
-    }
-
+    // AllSinks must be declared before SinkIndex so the array is initialized first.
     private static readonly SinkDefinition[] AllSinks =
     [
         // A03 — SQL
@@ -91,6 +74,26 @@ internal static class TaintSinks
         new("ILogger", "LogDebug", 0, SinkKind.LogInjection),
         new("ILogger", "Log", 1, SinkKind.LogInjection),
     ];
+
+    // SinkIndex declared after AllSinks to ensure correct static initialization order.
+    private static readonly Dictionary<(string TypeName, string MemberName), List<SinkDefinition>> SinkIndex =
+        BuildIndex();
+
+    private static Dictionary<(string, string), List<SinkDefinition>> BuildIndex()
+    {
+        var index = new Dictionary<(string, string), List<SinkDefinition>>();
+        foreach (var sink in AllSinks)
+        {
+            var key = (sink.TypeName, sink.MemberName);
+            if (!index.TryGetValue(key, out var list))
+            {
+                list = [];
+                index[key] = list;
+            }
+            list.Add(sink);
+        }
+        return index;
+    }
 
     /// <summary>
     /// Checks if the given member symbol + argument index constitutes a taint sink.

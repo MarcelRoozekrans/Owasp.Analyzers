@@ -53,7 +53,13 @@ internal sealed class TaintEngine
     {
         foreach (var variable in local.Declaration.Variables)
         {
-            if (variable.Initializer?.Value is { } initializer && IsTainted(initializer))
+            if (variable.Initializer?.Value is not { } initializer) continue;
+
+            // Check if the initializer is a sink invocation with tainted args
+            if (initializer is InvocationExpressionSyntax invocation)
+                AnalyzeInvocation(invocation);
+
+            if (IsTainted(initializer))
                 TaintedLocals.Add(variable.Identifier.Text);
         }
     }
