@@ -1,3 +1,35 @@
 <Project>
-  <!-- OWASP-A06: Vulnerable and Outdated Components target will be added in Task 8 -->
+
+  <!--
+    OWASP-A06: Vulnerable and Outdated Components
+    Runs dotnet list package --vulnerable during build and surfaces results as MSBuild warnings.
+  -->
+  <Target Name="OwaspA06VulnerabilityCheck"
+          AfterTargets="Build"
+          Condition="'$(OwaspA06Enabled)' != 'false'">
+
+    <Exec Command="dotnet list package --vulnerable --include-transitive 2&gt;&amp;1"
+          WorkingDirectory="$(MSBuildProjectDirectory)"
+          ConsoleToMSBuild="true"
+          EchoOff="true"
+          StandardOutputImportance="low">
+      <Output TaskParameter="ConsoleOutput" PropertyName="_OwaspA06Output" />
+    </Exec>
+
+    <ItemGroup>
+      <_VulnerableLines Include="$(_OwaspA06Output.Split('%0A'))" />
+    </ItemGroup>
+
+    <Warning
+      Condition="$([System.String]::Copy('%(_VulnerableLines.Identity)').Contains('has the following vulnerable packages'))"
+      Text="OWASP-A06-001: Vulnerable NuGet packages detected. Run 'dotnet list package --vulnerable' for details."
+      Code="OWASP-A06-001" />
+
+    <Warning
+      Condition="$([System.String]::Copy('%(_VulnerableLines.Identity)').Contains('deprecated'))"
+      Text="OWASP-A06-002: Deprecated NuGet packages detected. Run 'dotnet list package --deprecated' for details."
+      Code="OWASP-A06-002" />
+
+  </Target>
+
 </Project>
