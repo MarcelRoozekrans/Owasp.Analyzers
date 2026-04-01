@@ -21,6 +21,12 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Owasp.Analyzers.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
   <!-- Bundle the analyzer assembly and MSBuild targets into the NuGet package -->
   <ItemGroup>
     <None Include="build\Owasp.Analyzers.targets" Pack="true" PackagePath="build\" />
