@@ -1,0 +1,22 @@
+:root {
+  --ifm-color-primary: #e8162b;
+  --ifm-color-primary-dark: #d11427;
+  --ifm-color-primary-darker: #c61325;
+  --ifm-color-primary-darkest: #a3101e;
+  --ifm-color-primary-light: #ea2c3f;
+  --ifm-color-primary-lighter: #ec3849;
+  --ifm-color-primary-lightest: #f05d6d;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #f05d6d;
+  --ifm-color-primary-dark: #ed4457;
+  --ifm-color-primary-darker: #eb3a4e;
+  --ifm-color-primary-darkest: #e61329;
+  --ifm-color-primary-light: #f376839e;
+  --ifm-color-primary-lighter: #f47f8b;
+  --ifm-color-primary-lightest: #f8a3ab;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
