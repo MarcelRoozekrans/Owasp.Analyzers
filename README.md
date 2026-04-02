@@ -6,7 +6,7 @@
 
 Roslyn analyzers covering the [OWASP Top 10 2021](https://owasp.org/Top10/) for C#/.NET — catch security vulnerabilities at compile time.
 
-📖 **[Full documentation](https://marcelroozekrans.github.io/Owasp.Analyzers/)**
+📖 **[Full documentation](https://marcelroozekrans.github.io/Owasp.Analyzers/docs/intro)**
 
 ## Installation
 
@@ -65,7 +65,7 @@ The package is marked as `DevelopmentDependency` — it does not appear as a tra
 | OWASPA10002 | A10 SSRF | Error | SSRF via WebClient (taint analysis) |
 | OWASPA10003 | A10 SSRF | Warning | AllowAutoRedirect without URL validation |
 
-For detailed documentation with code examples and fix guidance, see the **[docs site](https://marcelroozekrans.github.io/Owasp.Analyzers/)**.
+For detailed documentation with code examples and fix guidance, see the **[docs site](https://marcelroozekrans.github.io/Owasp.Analyzers/docs/intro)**.
 
 ## Configuration
 
