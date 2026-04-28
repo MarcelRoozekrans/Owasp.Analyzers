@@ -3,6 +3,7 @@
 [![NuGet](https://img.shields.io/nuget/v/Owasp.Analyzers.svg)](https://www.nuget.org/packages/Owasp.Analyzers)
 [![CI](https://github.com/MarcelRoozekrans/Owasp.Analyzers/actions/workflows/ci.yml/badge.svg)](https://github.com/MarcelRoozekrans/Owasp.Analyzers/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![GitHub Sponsors](https://img.shields.io/github/sponsors/MarcelRoozekrans?style=flat&logo=githubsponsors&color=ea4aaa&label=Sponsor)](https://github.com/sponsors/MarcelRoozekrans)
 
 Roslyn analyzers covering the [OWASP Top 10 2021](https://owasp.org/Top10/) for C#/.NET — catch security vulnerabilities at compile time.
 
