@@ -1,13 +1,13 @@
-using Owasp.Analyzers.Analyzers.A10;
+using Owasp.Analyzers.Analyzers.A01;
 
-namespace Owasp.Analyzers.Tests.A10;
+namespace Owasp.Analyzers.Tests.A01;
 
 public class SsrfAnalyzerTests
 {
     private readonly SsrfAnalyzer _analyzer = new();
 
     [Fact]
-    public async Task TaintedUrlToHttpClient_ShouldDiagnosticA10001()
+    public async Task TaintedUrlToHttpClient_ShouldDiagnosticA01006()
     {
         var code = """
             public class Controller
@@ -22,11 +22,11 @@ public class SsrfAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA10001");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA01006");
     }
 
     [Fact]
-    public async Task HardcodedUrl_ShouldNotDiagnosticA10001()
+    public async Task HardcodedUrl_ShouldNotDiagnosticA01006()
     {
         var code = """
             public class Controller
@@ -39,11 +39,11 @@ public class SsrfAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA10001");
+        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA01006");
     }
 
     [Fact]
-    public async Task TaintedUrlToWebRequest_ShouldDiagnosticA10002()
+    public async Task TaintedUrlToWebRequest_ShouldDiagnosticA01007()
     {
         var code = """
             public class Controller
@@ -57,11 +57,11 @@ public class SsrfAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA10002");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA01007");
     }
 
     [Fact]
-    public async Task AllowAutoRedirectTrue_ShouldDiagnosticA10003()
+    public async Task AllowAutoRedirectTrue_ShouldDiagnosticA01008()
     {
         var code = """
             public class Controller
@@ -74,11 +74,11 @@ public class SsrfAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA10003");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA01008");
     }
 
     [Fact]
-    public async Task TaintedUrlToPostAsync_ShouldDiagnosticA10001()
+    public async Task TaintedUrlToPostAsync_ShouldDiagnosticA01006()
     {
         var code = """
             public class Controller
@@ -93,11 +93,11 @@ public class SsrfAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA10001");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA01006");
     }
 
     [Fact]
-    public async Task TaintedUrlToDownloadString_ShouldDiagnosticA10002()
+    public async Task TaintedUrlToDownloadString_ShouldDiagnosticA01007()
     {
         var code = """
             public class Controller
@@ -111,11 +111,11 @@ public class SsrfAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA10002");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA01007");
     }
 
     [Fact]
-    public async Task AllowAutoRedirectFalse_ShouldNotDiagnosticA10003()
+    public async Task AllowAutoRedirectFalse_ShouldNotDiagnosticA01008()
     {
         var code = """
             public class Controller
@@ -128,6 +128,6 @@ public class SsrfAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA10003");
+        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA01008");
     }
 }

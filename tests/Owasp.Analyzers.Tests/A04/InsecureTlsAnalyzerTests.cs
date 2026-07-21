@@ -1,13 +1,13 @@
-using Owasp.Analyzers.Analyzers.A02;
+using Owasp.Analyzers.Analyzers.A04;
 
-namespace Owasp.Analyzers.Tests.A02;
+namespace Owasp.Analyzers.Tests.A04;
 
 public class InsecureTlsAnalyzerTests
 {
     private readonly InsecureTlsAnalyzer _analyzer = new();
 
     [Fact]
-    public async Task HttpUrl_ShouldDiagnosticA02007()
+    public async Task HttpUrl_ShouldDiagnosticA04007()
     {
         var code = """
             public class C
@@ -19,7 +19,7 @@ public class InsecureTlsAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA02007");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA04007");
     }
 
     [Fact]
@@ -35,11 +35,11 @@ public class InsecureTlsAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA02007");
+        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA04007");
     }
 
     [Fact]
-    public async Task CertValidationBypass_ShouldDiagnosticA02006()
+    public async Task CertValidationBypass_ShouldDiagnosticA04006()
     {
         var code = """
             public class C
@@ -51,11 +51,11 @@ public class InsecureTlsAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA02006");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA04006");
     }
 
     [Fact]
-    public async Task LegacyTls_ShouldDiagnosticA02005()
+    public async Task LegacyTls_ShouldDiagnosticA04005()
     {
         var code = """
             public class C
@@ -67,11 +67,11 @@ public class InsecureTlsAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA02005");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA04005");
     }
 
     [Fact]
-    public async Task Ssl3Protocol_ShouldDiagnosticA02005()
+    public async Task Ssl3Protocol_ShouldDiagnosticA04005()
     {
         var code = """
             public class C
@@ -83,11 +83,11 @@ public class InsecureTlsAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA02005");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA04005");
     }
 
     [Fact]
-    public async Task Tls12Protocol_ShouldNotDiagnosticA02005()
+    public async Task Tls12Protocol_ShouldNotDiagnosticA04005()
     {
         var code = """
             public class C
@@ -99,11 +99,11 @@ public class InsecureTlsAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA02005");
+        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA04005");
     }
 
     [Fact]
-    public async Task CombinedTlsFlags_ShouldDiagnosticA02005()
+    public async Task CombinedTlsFlags_ShouldDiagnosticA04005()
     {
         var code = """
             public class Test
@@ -116,7 +116,7 @@ public class InsecureTlsAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA02005");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA04005");
     }
 
     [Fact]
@@ -132,6 +132,6 @@ public class InsecureTlsAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA02007");
+        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA04007");
     }
 }

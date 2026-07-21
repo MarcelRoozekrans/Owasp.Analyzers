@@ -1,19 +1,19 @@
 ---
-sidebar_position: 3
+sidebar_position: 5
 ---
 
-# A03 — Injection
+# A05 — Injection
 
 Injection vulnerabilities occur when user-controlled data is included in a command or query without proper sanitization. These rules use **taint analysis** to track data from HTTP request sources to dangerous sinks.
 
 See [Taint Engine](../taint-engine) for details on how the analysis works.
 
-## OWASPA03001 — SQL injection
+## OWASPA05001 — SQL injection
 
 | Property | Value |
 |----------|-------|
 | **Severity** | Error |
-| **Category** | A03 Injection |
+| **Category** | A05 Injection |
 | **Technique** | Taint analysis |
 
 ### What it detects
@@ -27,7 +27,7 @@ User-controlled data (from `HttpContext`, route values, query strings, form fiel
 public IActionResult Search(string term)
 {
     var sql = "SELECT * FROM Products WHERE Name = '" + term + "'";
-    // ❌ OWASPA03001: tainted value reaches SQL command
+    // ❌ OWASPA05001: tainted value reaches SQL command
     return Ok(_db.Execute(sql));
 }
 ```
@@ -56,12 +56,12 @@ var results = _db.Database
 
 ---
 
-## OWASPA03002 — OS command injection
+## OWASPA05002 — OS command injection
 
 | Property | Value |
 |----------|-------|
 | **Severity** | Error |
-| **Category** | A03 Injection |
+| **Category** | A05 Injection |
 | **Technique** | Taint analysis |
 
 ### What it detects
@@ -74,7 +74,7 @@ User-controlled data flowing into `Process.Start()`, `ProcessStartInfo.FileName`
 [HttpPost]
 public IActionResult Convert(string filename)
 {
-    // ❌ OWASPA03002: user input in process arguments
+    // ❌ OWASPA05002: user input in process arguments
     Process.Start("ffmpeg", $"-i {filename} output.mp4");
     return Ok();
 }
@@ -101,12 +101,12 @@ public IActionResult Convert(string filename)
 
 ---
 
-## OWASPA03003 — Path traversal
+## OWASPA05003 — Path traversal
 
 | Property | Value |
 |----------|-------|
 | **Severity** | Error |
-| **Category** | A03 Injection |
+| **Category** | A05 Injection |
 | **Technique** | Taint analysis |
 
 ### What it detects
@@ -119,7 +119,7 @@ User-controlled data flowing into `File.ReadAllText`, `File.WriteAllText`, `File
 [HttpGet]
 public IActionResult Download(string path)
 {
-    // ❌ OWASPA03003: user-controlled path — could be "../../etc/passwd"
+    // ❌ OWASPA05003: user-controlled path — could be "../../etc/passwd"
     var content = File.ReadAllText(path);
     return Content(content);
 }
@@ -143,12 +143,12 @@ public IActionResult Download(string filename)
 
 ---
 
-## OWASPA03004 — LDAP injection
+## OWASPA05004 — LDAP injection
 
 | Property | Value |
 |----------|-------|
 | **Severity** | Error |
-| **Category** | A03 Injection |
+| **Category** | A05 Injection |
 | **Technique** | Taint analysis |
 
 ### What it detects
@@ -162,7 +162,7 @@ User-controlled data flowing into LDAP search filter strings (e.g., `DirectorySe
 public IActionResult FindUser(string username)
 {
     var searcher = new DirectorySearcher();
-    // ❌ OWASPA03004: LDAP injection via filter
+    // ❌ OWASPA05004: LDAP injection via filter
     searcher.Filter = $"(&(objectClass=user)(sAMAccountName={username}))";
     return Ok(searcher.FindOne());
 }
@@ -188,12 +188,12 @@ public IActionResult FindUser(string username)
 
 ---
 
-## OWASPA03005 — XPath injection
+## OWASPA05005 — XPath injection
 
 | Property | Value |
 |----------|-------|
 | **Severity** | Error |
-| **Category** | A03 Injection |
+| **Category** | A05 Injection |
 | **Technique** | Taint analysis |
 
 ### What it detects
@@ -206,7 +206,7 @@ User-controlled data flowing into `XPathNavigator.Select()`, `XmlNode.SelectNode
 [HttpGet]
 public IActionResult FindProduct(string name)
 {
-    // ❌ OWASPA03005: XPath injection
+    // ❌ OWASPA05005: XPath injection
     var nodes = doc.SelectNodes($"//Product[Name='{name}']");
     return Ok(nodes?.Count);
 }
@@ -218,12 +218,12 @@ Use a parameterized XPath API or an `XmlNamespaceManager` with variables, or san
 
 ---
 
-## OWASPA03006 — Cross-site scripting (XSS)
+## OWASPA05006 — Cross-site scripting (XSS)
 
 | Property | Value |
 |----------|-------|
 | **Severity** | Error |
-| **Category** | A03 Injection |
+| **Category** | A05 Injection |
 | **Technique** | Taint analysis |
 
 ### What it detects
@@ -236,7 +236,7 @@ User-controlled data flowing into `Response.Write()`, `HtmlHelper.Raw()`, or `Ht
 [HttpGet]
 public IActionResult Greet(string name)
 {
-    // ❌ OWASPA03006: XSS — name is written raw into HTML
+    // ❌ OWASPA05006: XSS — name is written raw into HTML
     return Content($"<h1>Hello, {name}!</h1>", "text/html");
 }
 ```

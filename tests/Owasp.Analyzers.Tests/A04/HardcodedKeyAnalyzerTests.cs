@@ -1,13 +1,13 @@
-using Owasp.Analyzers.Analyzers.A02;
+using Owasp.Analyzers.Analyzers.A04;
 
-namespace Owasp.Analyzers.Tests.A02;
+namespace Owasp.Analyzers.Tests.A04;
 
 public class HardcodedKeyAnalyzerTests
 {
     private readonly HardcodedKeyAnalyzer _analyzer = new();
 
     [Fact]
-    public async Task HardcodedKeyBytes_ShouldDiagnosticA02004()
+    public async Task HardcodedKeyBytes_ShouldDiagnosticA04004()
     {
         var code = """
             public class C
@@ -19,11 +19,11 @@ public class HardcodedKeyAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA02004");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA04004");
     }
 
     [Fact]
-    public async Task HardcodedIvBytes_ShouldDiagnosticA02004()
+    public async Task HardcodedIvBytes_ShouldDiagnosticA04004()
     {
         var code = """
             public class C
@@ -35,7 +35,7 @@ public class HardcodedKeyAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA02004");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA04004");
     }
 
     [Fact]
@@ -51,11 +51,11 @@ public class HardcodedKeyAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA02004");
+        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA04004");
     }
 
     [Fact]
-    public async Task HardcodedSecretBytes_ShouldDiagnosticA02004()
+    public async Task HardcodedSecretBytes_ShouldDiagnosticA04004()
     {
         var code = """
             public class C
@@ -67,11 +67,11 @@ public class HardcodedKeyAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA02004");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA04004");
     }
 
     [Fact]
-    public async Task HardcodedKeyField_ShouldDiagnosticA02004()
+    public async Task HardcodedKeyField_ShouldDiagnosticA04004()
     {
         var code = """
             public class C
@@ -80,11 +80,11 @@ public class HardcodedKeyAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA02004");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA04004");
     }
 
     [Fact]
-    public async Task HardcodedSaltBytes_ShouldDiagnosticA02004()
+    public async Task HardcodedSaltBytes_ShouldDiagnosticA04004()
     {
         var code = """
             public class C
@@ -96,11 +96,11 @@ public class HardcodedKeyAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA02004");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA04004");
     }
 
     [Fact]
-    public async Task ImplicitByteArrayKey_ShouldDiagnosticA02004()
+    public async Task ImplicitByteArrayKey_ShouldDiagnosticA04004()
     {
         var code = """
             public class C
@@ -112,6 +112,6 @@ public class HardcodedKeyAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA02004");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA04004");
     }
 }

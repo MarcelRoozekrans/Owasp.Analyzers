@@ -34,15 +34,15 @@ The following are recognized as taint sources (user-controlled input):
 
 | Sink | Rule |
 |------|------|
-| SQL command string (concatenation/interpolation) | OWASPA03001 |
-| `Process.Start()` arguments | OWASPA03002 |
-| `File.*` / `Directory.*` / `Path.Combine` paths | OWASPA03003 |
-| `DirectorySearcher.Filter` | OWASPA03004 |
-| `XPathNavigator.Select()` / `XmlNode.SelectNodes()` | OWASPA03005 |
-| `Response.Write()` / `Html.Raw()` | OWASPA03006 |
-| `ILogger.*` message arguments | OWASPA09003 |
-| `HttpClient.GetAsync/PostAsync/SendAsync` URL | OWASPA10001 |
-| `WebClient.DownloadString/DownloadData` URL | OWASPA10002 |
+| SQL command string (concatenation/interpolation) | OWASPA05001 |
+| `Process.Start()` arguments | OWASPA05002 |
+| `File.*` / `Directory.*` / `Path.Combine` paths | OWASPA05003 |
+| `DirectorySearcher.Filter` | OWASPA05004 |
+| `XPathNavigator.Select()` / `XmlNode.SelectNodes()` | OWASPA05005 |
+| `Response.Write()` / `Html.Raw()` | OWASPA05006 |
+| `ILogger.*` message arguments | OWASPA09001 |
+| `HttpClient.GetAsync/PostAsync/SendAsync` URL | OWASPA01006 |
+| `WebClient.DownloadString/DownloadData` URL | OWASPA01007 |
 
 ## Propagation
 

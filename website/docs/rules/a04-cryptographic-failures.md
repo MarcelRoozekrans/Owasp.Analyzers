@@ -1,17 +1,17 @@
 ---
-sidebar_position: 2
+sidebar_position: 4
 ---
 
-# A02 — Cryptographic Failures
+# A04 — Cryptographic Failures
 
 Cryptographic failures cover weak algorithms, insecure configurations, hardcoded secrets, and disabled security checks. These rules detect the most common cryptographic mistakes in .NET code.
 
-## OWASPA02001 — Weak hashing algorithm
+## OWASPA04001 — Weak hashing algorithm
 
 | Property | Value |
 |----------|-------|
 | **Severity** | Warning |
-| **Category** | A02 Cryptographic Failures |
+| **Category** | A04 Cryptographic Failures |
 
 ### What it detects
 
@@ -38,12 +38,12 @@ string hashed = BCrypt.HashPassword(password);
 
 ---
 
-## OWASPA02002 — ECB block cipher mode
+## OWASPA04002 — ECB block cipher mode
 
 | Property | Value |
 |----------|-------|
 | **Severity** | Warning |
-| **Category** | A02 Cryptographic Failures |
+| **Category** | A04 Cryptographic Failures |
 
 ### What it detects
 
@@ -70,12 +70,12 @@ aes.GenerateIV();
 
 ---
 
-## OWASPA02003 — System.Random for security purposes
+## OWASPA04003 — System.Random for security purposes
 
 | Property | Value |
 |----------|-------|
 | **Severity** | Info |
-| **Category** | A02 Cryptographic Failures |
+| **Category** | A04 Cryptographic Failures |
 
 ### What it detects
 
@@ -101,12 +101,12 @@ string tokenHex = Convert.ToHexString(token);
 
 ---
 
-## OWASPA02004 — Hardcoded cryptographic key or IV
+## OWASPA04004 — Hardcoded cryptographic key or IV
 
 | Property | Value |
 |----------|-------|
 | **Severity** | Error |
-| **Category** | A02 Cryptographic Failures |
+| **Category** | A04 Cryptographic Failures |
 
 ### What it detects
 
@@ -136,12 +136,12 @@ Or load from a secure configuration source (environment variable, Azure Key Vaul
 
 ---
 
-## OWASPA02005 — Legacy TLS protocol version
+## OWASPA04005 — Legacy TLS protocol version
 
 | Property | Value |
 |----------|-------|
 | **Severity** | Warning |
-| **Category** | A02 Cryptographic Failures |
+| **Category** | A04 Cryptographic Failures |
 
 ### What it detects
 
@@ -171,12 +171,12 @@ var handler = new HttpClientHandler
 
 ---
 
-## OWASPA02006 — Certificate validation disabled
+## OWASPA04006 — Certificate validation disabled
 
 | Property | Value |
 |----------|-------|
 | **Severity** | Error |
-| **Category** | A02 Cryptographic Failures |
+| **Category** | A04 Cryptographic Failures |
 
 ### What it detects
 
@@ -206,12 +206,12 @@ If you need to trust a custom CA, add it to the system certificate store rather 
 
 ---
 
-## OWASPA02007 — HTTP URL (not HTTPS)
+## OWASPA04007 — HTTP URL (not HTTPS)
 
 | Property | Value |
 |----------|-------|
 | **Severity** | Warning |
-| **Category** | A02 Cryptographic Failures |
+| **Category** | A04 Cryptographic Failures |
 
 ### What it detects
 
@@ -235,16 +235,16 @@ var response = await client.GetAsync("https://api.example.com/data");
 
 ---
 
-## OWASPA02008 — Missing HSTS configuration
+## OWASPA04008 — Missing HSTS configuration
 
 | Property | Value |
 |----------|-------|
 | **Severity** | Warning |
-| **Category** | A02 Cryptographic Failures |
+| **Category** | A04 Cryptographic Failures |
 
 ### What it detects
 
-ASP.NET Core applications that call `app.UseHttpsRedirection()` without also calling `app.UseHsts()` in the middleware pipeline.
+ASP.NET Core applications with a `Configure`/`ConfigureApp` method that never calls `app.UseHsts()`.
 
 ### Why it matters
 

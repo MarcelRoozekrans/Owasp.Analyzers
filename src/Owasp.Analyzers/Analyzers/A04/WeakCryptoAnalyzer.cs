@@ -4,25 +4,25 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
 
-namespace Owasp.Analyzers.Analyzers.A02;
+namespace Owasp.Analyzers.Analyzers.A04;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class WeakCryptoAnalyzer : DiagnosticAnalyzer
 {
-    private static readonly DiagnosticDescriptor Rule001 = new("OWASPA02001",
+    private static readonly DiagnosticDescriptor Rule001 = new("OWASPA04001",
         "Weak cryptographic algorithm",
         "'{0}' is a weak or broken algorithm — use AES-GCM, SHA-256 or stronger",
-        "OWASP.A02", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+        "OWASP.A04", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
-    private static readonly DiagnosticDescriptor Rule002 = new("OWASPA02002",
+    private static readonly DiagnosticDescriptor Rule002 = new("OWASPA04002",
         "ECB cipher mode is insecure",
         "CipherMode.ECB does not provide semantic security — use AES-GCM or AES-CBC with HMAC",
-        "OWASP.A02", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+        "OWASP.A04", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
-    private static readonly DiagnosticDescriptor Rule003 = new("OWASPA02003",
+    private static readonly DiagnosticDescriptor Rule003 = new("OWASPA04003",
         "System.Random is not cryptographically secure",
         "Use RandomNumberGenerator.GetBytes() instead of System.Random for security-sensitive operations",
-        "OWASP.A02", DiagnosticSeverity.Info, isEnabledByDefault: true);
+        "OWASP.A04", DiagnosticSeverity.Info, isEnabledByDefault: true);
 
     private static readonly HashSet<string> WeakAlgorithms = new(StringComparer.Ordinal)
     {

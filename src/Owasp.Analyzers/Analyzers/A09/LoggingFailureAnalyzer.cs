@@ -11,29 +11,14 @@ namespace Owasp.Analyzers.Analyzers.A09;
 public sealed class LoggingFailureAnalyzer : DiagnosticAnalyzer
 {
     private static readonly DiagnosticDescriptor Rule001 = new("OWASPA09001",
-        "Empty catch block suppresses exceptions silently",
-        "Empty catch block swallows exceptions without any logging or handling — add logging or rethrow",
-        "OWASP.A09", DiagnosticSeverity.Warning, isEnabledByDefault: true);
-
-    private static readonly DiagnosticDescriptor Rule002 = new("OWASPA09002",
-        "Catch block missing logging",
-        "Catch block does not contain any logging call — exceptions should be logged for security monitoring",
-        "OWASP.A09", DiagnosticSeverity.Warning, isEnabledByDefault: true);
-
-    private static readonly DiagnosticDescriptor Rule003 = new("OWASPA09003",
         "Log injection via tainted user input",
         "Tainted user input flows into a logging call — sanitize input before logging to prevent log injection",
         "OWASP.A09", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
-    private static readonly DiagnosticDescriptor Rule004 = new("OWASPA09004",
+    private static readonly DiagnosticDescriptor Rule002 = new("OWASPA09002",
         "Sensitive data in log message",
         "String literal passed to a logging method contains sensitive keyword '{0}' — avoid logging passwords, tokens, or secrets",
         "OWASP.A09", DiagnosticSeverity.Warning, isEnabledByDefault: true);
-
-    private static readonly ImmutableHashSet<string> LoggingMethodNames = ImmutableHashSet.Create(
-        StringComparer.OrdinalIgnoreCase,
-        "Log", "LogInformation", "LogWarning", "LogError", "LogDebug", "LogTrace", "LogCritical",
-        "WriteLine", "Write", "Info", "Error", "Warn", "Debug", "Fatal");
 
     private static readonly ImmutableArray<string> SensitiveKeywords =
     [
@@ -42,56 +27,14 @@ public sealed class LoggingFailureAnalyzer : DiagnosticAnalyzer
     ];
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        [Rule001, Rule002, Rule003, Rule004];
+        [Rule001, Rule002];
 
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
-        context.RegisterSyntaxNodeAction(AnalyzeCatchClause, SyntaxKind.CatchClause);
         context.RegisterSyntaxNodeAction(AnalyzeInvocationForSensitiveLog, SyntaxKind.InvocationExpression);
         context.RegisterSemanticModelAction(AnalyzeTaintedLogging);
-    }
-
-    private static void AnalyzeCatchClause(SyntaxNodeAnalysisContext context)
-    {
-        var catchClause = (CatchClauseSyntax)context.Node;
-        var block = catchClause.Block;
-        var statements = block.Statements;
-
-        // OWASPA09001 — empty catch block (zero statements, ignoring trivia/comments)
-        if (statements.Count == 0)
-        {
-            context.ReportDiagnostic(Diagnostic.Create(Rule001, catchClause.GetLocation()));
-            return;
-        }
-
-        // OWASPA09002 — non-empty catch with no logging invocation
-        if (!BlockContainsLoggingCall(block))
-        {
-            context.ReportDiagnostic(Diagnostic.Create(Rule002, catchClause.GetLocation()));
-        }
-    }
-
-    private static bool BlockContainsLoggingCall(BlockSyntax block)
-    {
-        foreach (var invocation in block.DescendantNodes().OfType<InvocationExpressionSyntax>())
-        {
-            var methodName = GetInvokedMethodName(invocation);
-            if (methodName != null && LoggingMethodNames.Contains(methodName))
-                return true;
-        }
-        return false;
-    }
-
-    private static string? GetInvokedMethodName(InvocationExpressionSyntax invocation)
-    {
-        return invocation.Expression switch
-        {
-            MemberAccessExpressionSyntax member => member.Name.Identifier.Text,
-            IdentifierNameSyntax identifier => identifier.Identifier.Text,
-            _ => null
-        };
     }
 
     private static void AnalyzeInvocationForSensitiveLog(SyntaxNodeAnalysisContext context)
@@ -99,11 +42,11 @@ public sealed class LoggingFailureAnalyzer : DiagnosticAnalyzer
         var invocation = (InvocationExpressionSyntax)context.Node;
 
         // Check if this is a logging method call
-        var methodName = GetInvokedMethodName(invocation);
-        if (methodName == null || !LoggingMethodNames.Contains(methodName))
+        var methodName = LoggingHeuristics.GetInvokedMethodName(invocation);
+        if (methodName == null || !LoggingHeuristics.LoggingMethodNames.Contains(methodName))
             return;
 
-        // OWASPA09004 — check string literal arguments for sensitive keywords
+        // OWASPA09002 — check string literal arguments for sensitive keywords
         foreach (var argument in invocation.ArgumentList.Arguments)
         {
             if (argument.Expression is LiteralExpressionSyntax literal &&
@@ -115,7 +58,7 @@ public sealed class LoggingFailureAnalyzer : DiagnosticAnalyzer
                     if (value.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         var matchedKeyword = keyword;
-                        context.ReportDiagnostic(Diagnostic.Create(Rule004, literal.GetLocation(), matchedKeyword));
+                        context.ReportDiagnostic(Diagnostic.Create(Rule002, literal.GetLocation(), matchedKeyword));
                         return;
                     }
                 }
@@ -130,7 +73,7 @@ public sealed class LoggingFailureAnalyzer : DiagnosticAnalyzer
         for (var i = 0; i < engine.SinkHits.Count; i++)
         {
             if (engine.SinkHits[i] == TaintSinks.SinkKind.LogInjection)
-                context.ReportDiagnostic(Diagnostic.Create(Rule003, engine.SinkLocations[i]));
+                context.ReportDiagnostic(Diagnostic.Create(Rule001, engine.SinkLocations[i]));
         }
     }
 }

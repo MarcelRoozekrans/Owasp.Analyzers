@@ -4,25 +4,25 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
 
-namespace Owasp.Analyzers.Analyzers.A02;
+namespace Owasp.Analyzers.Analyzers.A04;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class InsecureTlsAnalyzer : DiagnosticAnalyzer
 {
-    private static readonly DiagnosticDescriptor Rule005 = new("OWASPA02005",
+    private static readonly DiagnosticDescriptor Rule005 = new("OWASPA04005",
         "Legacy TLS protocol",
         "SecurityProtocol includes deprecated Ssl3 or Tls — use Tls12 or Tls13",
-        "OWASP.A02", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+        "OWASP.A04", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
-    private static readonly DiagnosticDescriptor Rule006 = new("OWASPA02006",
+    private static readonly DiagnosticDescriptor Rule006 = new("OWASPA04006",
         "Certificate validation disabled",
         "ServerCertificateValidationCallback always returns true — TLS verification is disabled",
-        "OWASP.A02", DiagnosticSeverity.Error, isEnabledByDefault: true);
+        "OWASP.A04", DiagnosticSeverity.Error, isEnabledByDefault: true);
 
-    private static readonly DiagnosticDescriptor Rule007 = new("OWASPA02007",
+    private static readonly DiagnosticDescriptor Rule007 = new("OWASPA04007",
         "Hardcoded HTTP URL",
         "URL '{0}' uses HTTP — use HTTPS to protect data in transit",
-        "OWASP.A02", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+        "OWASP.A04", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule005, Rule006, Rule007];
 

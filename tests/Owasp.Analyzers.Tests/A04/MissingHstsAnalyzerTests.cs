@@ -1,13 +1,13 @@
-using Owasp.Analyzers.Analyzers.A02;
+using Owasp.Analyzers.Analyzers.A04;
 
-namespace Owasp.Analyzers.Tests.A02;
+namespace Owasp.Analyzers.Tests.A04;
 
 public class MissingHstsAnalyzerTests
 {
     private readonly MissingHstsAnalyzer _analyzer = new();
 
     [Fact]
-    public async Task Configure_WithoutUseHsts_ShouldDiagnosticA02008()
+    public async Task Configure_WithoutUseHsts_ShouldDiagnosticA04008()
     {
         var code = """
             public class Startup
@@ -20,7 +20,7 @@ public class MissingHstsAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA02008");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA04008");
     }
 
     [Fact]
@@ -37,11 +37,11 @@ public class MissingHstsAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA02008");
+        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA04008");
     }
 
     [Fact]
-    public async Task ConfigureApp_WithoutUseHsts_ShouldDiagnosticA02008()
+    public async Task ConfigureApp_WithoutUseHsts_ShouldDiagnosticA04008()
     {
         var code = """
             public class Program
@@ -53,7 +53,7 @@ public class MissingHstsAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA02008");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA04008");
     }
 
     [Fact]
@@ -69,7 +69,7 @@ public class MissingHstsAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA02008");
+        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA04008");
     }
 
     [Fact]
@@ -85,6 +85,6 @@ public class MissingHstsAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA02008");
+        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA04008");
     }
 }

@@ -4,15 +4,15 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
 
-namespace Owasp.Analyzers.Analyzers.A02;
+namespace Owasp.Analyzers.Analyzers.A04;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class MissingHstsAnalyzer : DiagnosticAnalyzer
 {
-    private static readonly DiagnosticDescriptor Rule = new("OWASPA02008",
+    private static readonly DiagnosticDescriptor Rule = new("OWASPA04008",
         "Missing HSTS middleware",
         "app.UseHsts() is not called — HTTP Strict Transport Security is not enforced",
-        "OWASP.A02", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+        "OWASP.A04", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule];
 
