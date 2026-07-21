@@ -1,12 +1,16 @@
 {
-  "release-type": "simple",
-  "bump-minor-pre-major": true,
-  "bump-patch-for-minor-pre-major": true,
-  "extra-files": [
-    {
-      "type": "xml",
-      "path": "Directory.Build.props",
-      "xpath": "//Project/PropertyGroup/Version"
+  "packages": {
+    ".": {
+      "release-type": "simple",
+      "bump-minor-pre-major": true,
+      "bump-patch-for-minor-pre-major": true,
+      "extra-files": [
+        {
+          "type": "xml",
+          "path": "Directory.Build.props",
+          "xpath": "//Project/PropertyGroup/Version"
+        }
+      ]
     }
-  ]
+  }
 }
