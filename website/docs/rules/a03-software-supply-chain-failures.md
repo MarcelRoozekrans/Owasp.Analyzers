@@ -1,17 +1,17 @@
 ---
-sidebar_position: 6
+sidebar_position: 3
 ---
 
-# A06 — Vulnerable and Outdated Components
+# A03 — Software Supply Chain Failures
 
-Using components with known vulnerabilities is one of the most common ways applications are compromised. These rules use MSBuild targets to detect dangerous or deprecated NuGet packages at build time.
+OWASP's 2025 definition of this category spans the whole software supply chain — dependencies, build systems, and distribution infrastructure. Today, Owasp.Analyzers covers the dependency slice of that: these rules use MSBuild targets to detect known-vulnerable or deprecated NuGet packages at build time. Build-system and distribution-infrastructure compromise (e.g. CI/CD tampering, unsigned artifacts, dependency confusion) are not yet covered.
 
-## OWASPA06001 — Known-vulnerable NuGet package
+## OWASPA03001 — Known-vulnerable NuGet package
 
 | Property | Value |
 |----------|-------|
 | **Severity** | Warning |
-| **Category** | A06 Vulnerable Components |
+| **Category** | A03 Software Supply Chain Failures |
 | **Technique** | MSBuild target |
 
 ### What it detects
@@ -45,12 +45,12 @@ This command queries the NuGet advisory database and lists all packages in your 
 
 ---
 
-## OWASPA06002 — Deprecated or end-of-life NuGet package
+## OWASPA03002 — Deprecated or end-of-life NuGet package
 
 | Property | Value |
 |----------|-------|
 | **Severity** | Warning |
-| **Category** | A06 Vulnerable Components |
+| **Category** | A03 Software Supply Chain Failures |
 | **Technique** | MSBuild target |
 
 ### What it detects

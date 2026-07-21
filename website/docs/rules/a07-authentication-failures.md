@@ -2,7 +2,7 @@
 sidebar_position: 7
 ---
 
-# A07 — Identification and Authentication Failures
+# A07 — Authentication Failures
 
 Authentication failures cover weaknesses in JWT validation, cookie security, and session management. These rules detect dangerous defaults that silently disable security checks.
 

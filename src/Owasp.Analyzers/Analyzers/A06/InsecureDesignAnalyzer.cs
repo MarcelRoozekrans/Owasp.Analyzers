@@ -4,20 +4,20 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
 
-namespace Owasp.Analyzers.Analyzers.A04;
+namespace Owasp.Analyzers.Analyzers.A06;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class InsecureDesignAnalyzer : DiagnosticAnalyzer
 {
-    private static readonly DiagnosticDescriptor Rule002 = new("OWASPA04002",
+    private static readonly DiagnosticDescriptor Rule = new("OWASPA06001",
         "Missing rate limiting on auth endpoint",
         "Authentication endpoint '{0}' has no rate limiting — susceptible to brute force",
-        "OWASP.A04", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+        "OWASP.A06", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     private static readonly HashSet<string> AuthIndicators = new()
         { "login", "signin", "authenticate", "token", "auth" };
 
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule002];
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [Rule];
 
     public override void Initialize(AnalysisContext context)
     {
@@ -42,6 +42,6 @@ public sealed class InsecureDesignAnalyzer : DiagnosticAnalyzer
         if (!attrNames.Any(a => a is "HttpPost" or "HttpGet")) return;
         if (attrNames.Any(a => a.Contains("RateLimit"))) return;
 
-        context.ReportDiagnostic(Diagnostic.Create(Rule002, method.Identifier.GetLocation(), name));
+        context.ReportDiagnostic(Diagnostic.Create(Rule, method.Identifier.GetLocation(), name));
     }
 }

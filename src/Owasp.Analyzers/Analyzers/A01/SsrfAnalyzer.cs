@@ -5,27 +5,27 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using Owasp.Analyzers.Taint;
 using System.Collections.Immutable;
 
-namespace Owasp.Analyzers.Analyzers.A10;
+namespace Owasp.Analyzers.Analyzers.A01;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class SsrfAnalyzer : DiagnosticAnalyzer
 {
-    private static readonly DiagnosticDescriptor Rule001 = new("OWASPA10001",
+    private static readonly DiagnosticDescriptor Rule001 = new("OWASPA01006",
         "Server-Side Request Forgery via HttpClient",
         "Tainted user input flows into HttpClient request URL — validate or allowlist the URL before use",
-        "OWASP.A10", DiagnosticSeverity.Error, isEnabledByDefault: true);
+        "OWASP.A01", DiagnosticSeverity.Error, isEnabledByDefault: true);
 
-    private static readonly DiagnosticDescriptor Rule002 = new("OWASPA10002",
+    private static readonly DiagnosticDescriptor Rule002 = new("OWASPA01007",
         "Server-Side Request Forgery via WebClient/WebRequest",
         "Tainted user input flows into WebClient or WebRequest URL — validate or allowlist the URL before use",
-        "OWASP.A10", DiagnosticSeverity.Error, isEnabledByDefault: true);
+        "OWASP.A01", DiagnosticSeverity.Error, isEnabledByDefault: true);
 
     // Rule003 is a linter-style rule: it fires unconditionally on AllowAutoRedirect = true assignments
     // without taint-flow context. Warning (not Error) severity allows teams to suppress where legitimate.
-    private static readonly DiagnosticDescriptor Rule003 = new("OWASPA10003",
+    private static readonly DiagnosticDescriptor Rule003 = new("OWASPA01008",
         "AllowAutoRedirect enabled",
         "AllowAutoRedirect is set to true — this can allow attackers to redirect requests to internal services",
-        "OWASP.A10", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+        "OWASP.A01", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
     // HttpClient sinks registered in TaintSinks: GetAsync, PostAsync, SendAsync
     private static readonly ImmutableHashSet<string> HttpClientSinkMethods = ImmutableHashSet.Create(

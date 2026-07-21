@@ -1,17 +1,17 @@
 ---
-sidebar_position: 4
+sidebar_position: 6
 ---
 
-# A04 — Insecure Design
+# A06 — Insecure Design
 
 Insecure design refers to missing or ineffective security controls in the application architecture. This category focuses on design-level weaknesses rather than implementation bugs.
 
-## OWASPA04002 — Missing rate limiting on authentication endpoints
+## OWASPA06001 — Missing rate limiting on authentication endpoints
 
 | Property | Value |
 |----------|-------|
 | **Severity** | Warning |
-| **Category** | A04 Insecure Design |
+| **Category** | A06 Insecure Design |
 
 ### What it detects
 

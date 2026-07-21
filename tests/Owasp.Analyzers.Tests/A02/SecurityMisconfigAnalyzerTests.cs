@@ -1,13 +1,13 @@
-using Owasp.Analyzers.Analyzers.A05;
+using Owasp.Analyzers.Analyzers.A02;
 
-namespace Owasp.Analyzers.Tests.A05;
+namespace Owasp.Analyzers.Tests.A02;
 
 public class SecurityMisconfigAnalyzerTests
 {
     private readonly SecurityMisconfigAnalyzer _analyzer = new();
 
     [Fact]
-    public async Task UseDeveloperExceptionPage_Unconditional_ShouldDiagnosticA05001()
+    public async Task UseDeveloperExceptionPage_Unconditional_ShouldDiagnosticA02001()
     {
         var code = """
             public class Startup
@@ -20,7 +20,7 @@ public class SecurityMisconfigAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA05001");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA02001");
     }
 
     [Fact]
@@ -38,11 +38,11 @@ public class SecurityMisconfigAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA05001");
+        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA02001");
     }
 
     [Fact]
-    public async Task Configure_WithoutHttpsRedirection_ShouldDiagnosticA05002()
+    public async Task Configure_WithoutHttpsRedirection_ShouldDiagnosticA02002()
     {
         var code = """
             public class Startup
@@ -51,11 +51,11 @@ public class SecurityMisconfigAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA05002");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA02002");
     }
 
     [Fact]
-    public async Task Configure_WithHttpsRedirection_ShouldNotDiagnosticA05002()
+    public async Task Configure_WithHttpsRedirection_ShouldNotDiagnosticA02002()
     {
         var code = """
             public class Startup
@@ -67,11 +67,11 @@ public class SecurityMisconfigAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA05002");
+        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA02002");
     }
 
     [Fact]
-    public async Task UseDirectoryBrowser_ShouldDiagnosticA05003()
+    public async Task UseDirectoryBrowser_ShouldDiagnosticA02003()
     {
         var code = """
             public class Startup
@@ -84,11 +84,11 @@ public class SecurityMisconfigAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA05003");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA02003");
     }
 
     [Fact]
-    public async Task UseDirectoryBrowser_Absent_ShouldNotDiagnosticA05003()
+    public async Task UseDirectoryBrowser_Absent_ShouldNotDiagnosticA02003()
     {
         var code = """
             public class Startup
@@ -100,11 +100,11 @@ public class SecurityMisconfigAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA05003");
+        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA02003");
     }
 
     [Fact]
-    public async Task IncludeErrorDetails_True_ShouldDiagnosticA05004()
+    public async Task IncludeErrorDetails_True_ShouldDiagnosticA02004()
     {
         var code = """
             public class Startup
@@ -117,11 +117,11 @@ public class SecurityMisconfigAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA05004");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA02004");
     }
 
     [Fact]
-    public async Task IncludeErrorDetails_False_ShouldNotDiagnosticA05004()
+    public async Task IncludeErrorDetails_False_ShouldNotDiagnosticA02004()
     {
         var code = """
             public class Startup
@@ -134,11 +134,11 @@ public class SecurityMisconfigAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA05004");
+        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA02004");
     }
 
     [Fact]
-    public async Task ConfigureServices_WithoutAddAntiforgery_ShouldDiagnosticA05005()
+    public async Task ConfigureServices_WithoutAddAntiforgery_ShouldDiagnosticA02005()
     {
         var code = """
             public class Startup
@@ -150,11 +150,11 @@ public class SecurityMisconfigAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA05005");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA02005");
     }
 
     [Fact]
-    public async Task ConfigureServices_WithAddAntiforgery_ShouldNotDiagnosticA05005()
+    public async Task ConfigureServices_WithAddAntiforgery_ShouldNotDiagnosticA02005()
     {
         var code = """
             public class Startup
@@ -167,11 +167,11 @@ public class SecurityMisconfigAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA05005");
+        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA02005");
     }
 
     [Fact]
-    public async Task HardcodedPassword_ShouldDiagnosticA05006()
+    public async Task HardcodedPassword_ShouldDiagnosticA02006()
     {
         var code = """
             public class Config
@@ -180,11 +180,11 @@ public class SecurityMisconfigAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA05006");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA02006");
     }
 
     [Fact]
-    public async Task NonCredentialString_ShouldNotDiagnosticA05006()
+    public async Task NonCredentialString_ShouldNotDiagnosticA02006()
     {
         var code = """
             public class Config
@@ -193,6 +193,6 @@ public class SecurityMisconfigAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA05006");
+        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA02006");
     }
 }

@@ -2,7 +2,7 @@
 sidebar_position: 8
 ---
 
-# A08 — Software and Data Integrity Failures
+# A08 — Software or Data Integrity Failures
 
 Data integrity failures occur when code deserializes untrusted data without type restrictions, allowing attackers to instantiate arbitrary types and execute code. These rules detect the most dangerous .NET deserialization patterns.
 
@@ -11,7 +11,7 @@ Data integrity failures occur when code deserializes untrusted data without type
 | Property | Value |
 |----------|-------|
 | **Severity** | Error |
-| **Category** | A08 Data Integrity Failures |
+| **Category** | A08 Software or Data Integrity Failures |
 
 ### What it detects
 
@@ -47,7 +47,7 @@ var obj = MessagePackSerializer.Deserialize<MyType>(stream);
 | Property | Value |
 |----------|-------|
 | **Severity** | Error |
-| **Category** | A08 Data Integrity Failures |
+| **Category** | A08 Software or Data Integrity Failures |
 
 ### What it detects
 
@@ -73,7 +73,7 @@ var obj = JsonSerializer.Deserialize<MyType>(stream);
 | Property | Value |
 |----------|-------|
 | **Severity** | Error |
-| **Category** | A08 Data Integrity Failures |
+| **Category** | A08 Software or Data Integrity Failures |
 
 ### What it detects
 
@@ -111,7 +111,7 @@ var obj = JsonSerializer.Deserialize<MyType>(json);
 | Property | Value |
 |----------|-------|
 | **Severity** | Error |
-| **Category** | A08 Data Integrity Failures |
+| **Category** | A08 Software or Data Integrity Failures |
 
 ### What it detects
 

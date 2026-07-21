@@ -4,40 +4,40 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
 
-namespace Owasp.Analyzers.Analyzers.A05;
+namespace Owasp.Analyzers.Analyzers.A02;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class SecurityMisconfigAnalyzer : DiagnosticAnalyzer
 {
-    private static readonly DiagnosticDescriptor Rule001 = new("OWASPA05001",
+    private static readonly DiagnosticDescriptor Rule001 = new("OWASPA02001",
         "Developer exception page in production",
         "UseDeveloperExceptionPage() should only be called in Development environment — wrap in IsDevelopment() check",
-        "OWASP.A05", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+        "OWASP.A02", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
-    private static readonly DiagnosticDescriptor Rule002 = new("OWASPA05002",
+    private static readonly DiagnosticDescriptor Rule002 = new("OWASPA02002",
         "Missing HTTPS redirection",
         "app.UseHttpsRedirection() is not called — HTTP requests will not be redirected to HTTPS",
-        "OWASP.A05", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+        "OWASP.A02", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
-    private static readonly DiagnosticDescriptor Rule003 = new("OWASPA05003",
+    private static readonly DiagnosticDescriptor Rule003 = new("OWASPA02003",
         "Directory browsing enabled",
         "UseDirectoryBrowser() exposes directory listings — remove unless intentional",
-        "OWASP.A05", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+        "OWASP.A02", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
-    private static readonly DiagnosticDescriptor Rule004 = new("OWASPA05004",
+    private static readonly DiagnosticDescriptor Rule004 = new("OWASPA02004",
         "Error details exposed",
         "IncludeErrorDetails is enabled — stack traces and internal details may be exposed to clients",
-        "OWASP.A05", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+        "OWASP.A02", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
-    private static readonly DiagnosticDescriptor Rule005 = new("OWASPA05005",
+    private static readonly DiagnosticDescriptor Rule005 = new("OWASPA02005",
         "Antiforgery not configured",
         "services.AddAntiforgery() is not called — CSRF protection may not be active",
-        "OWASP.A05", DiagnosticSeverity.Warning, isEnabledByDefault: true);
+        "OWASP.A02", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
-    private static readonly DiagnosticDescriptor Rule006 = new("OWASPA05006",
+    private static readonly DiagnosticDescriptor Rule006 = new("OWASPA02006",
         "Hardcoded credential",
         "Variable '{0}' appears to contain a hardcoded credential",
-        "OWASP.A05", DiagnosticSeverity.Error, isEnabledByDefault: true);
+        "OWASP.A02", DiagnosticSeverity.Error, isEnabledByDefault: true);
 
     private static readonly HashSet<string> CredentialIndicators = new(StringComparer.OrdinalIgnoreCase)
         { "password", "passwd", "pwd", "credential", "secret", "apikey", "api_key" };
@@ -139,9 +139,9 @@ public sealed class SecurityMisconfigAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Checks for hardcoded credentials in variable/field initializers and assignments (OWASPA05006).
+    /// Checks for hardcoded credentials in variable/field initializers and assignments (OWASPA02006).
     /// Detection scope: general credential variable names (password, passwd, pwd, credential, secret, apikey, api_key).
-    /// This is intentionally separate from OWASPA02004, which targets cryptographic key/IV byte[] literals.
+    /// This is intentionally separate from OWASPA04004, which targets cryptographic key/IV byte[] literals.
     /// </summary>
     private static void CheckForHardcodedCredential(SyntaxNodeAnalysisContext context,
         string name, ExpressionSyntax value, Location location)

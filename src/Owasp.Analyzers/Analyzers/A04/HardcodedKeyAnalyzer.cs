@@ -4,17 +4,17 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
 
-namespace Owasp.Analyzers.Analyzers.A02;
+namespace Owasp.Analyzers.Analyzers.A04;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class HardcodedKeyAnalyzer : DiagnosticAnalyzer
 {
-    public const string DiagnosticId = "OWASPA02004";
+    public const string DiagnosticId = "OWASPA04004";
 
     private static readonly DiagnosticDescriptor Rule = new(
         DiagnosticId, "Hardcoded cryptographic key",
         "Variable '{0}' appears to contain a hardcoded cryptographic key or IV",
-        "OWASP.A02", DiagnosticSeverity.Error, isEnabledByDefault: true);
+        "OWASP.A04", DiagnosticSeverity.Error, isEnabledByDefault: true);
 
     private static readonly HashSet<string> LongKeyIndicators = new(StringComparer.OrdinalIgnoreCase)
     {

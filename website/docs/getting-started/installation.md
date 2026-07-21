@@ -34,7 +34,7 @@ You can override the default severity for any rule in your `.editorconfig`:
 ```ini
 [*.cs]
 # Downgrade SSRF to a warning instead of an error
-dotnet_diagnostic.OWASPA10001.severity = warning
+dotnet_diagnostic.OWASPA01006.severity = warning
 
 # Suppress CORS wildcard rule entirely
 dotnet_diagnostic.OWASPA01004.severity = none

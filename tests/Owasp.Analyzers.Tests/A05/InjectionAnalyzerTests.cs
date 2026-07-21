@@ -1,13 +1,13 @@
-using Owasp.Analyzers.Analyzers.A03;
+using Owasp.Analyzers.Analyzers.A05;
 
-namespace Owasp.Analyzers.Tests.A03;
+namespace Owasp.Analyzers.Tests.A05;
 
 public class InjectionAnalyzerTests
 {
     private readonly InjectionAnalyzer _analyzer = new();
 
     [Fact]
-    public async Task SqlInjection_StringConcat_ShouldDiagnosticA03001()
+    public async Task SqlInjection_StringConcat_ShouldDiagnosticA05001()
     {
         var code = """
             public class SqlCommand
@@ -28,11 +28,11 @@ public class InjectionAnalyzerTests
             public class TestQuery { public string this[string key] => key; }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA03001");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA05001");
     }
 
     [Fact]
-    public async Task SqlInjection_Interpolation_ShouldDiagnosticA03001()
+    public async Task SqlInjection_Interpolation_ShouldDiagnosticA05001()
     {
         var code = """
             public class SqlCommand { public string CommandText { get; set; } = ""; }
@@ -50,7 +50,7 @@ public class InjectionAnalyzerTests
             public class TestQuery { public string this[string key] => key; }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA03001");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA05001");
     }
 
     [Fact]
@@ -68,11 +68,11 @@ public class InjectionAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA03001");
+        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA05001");
     }
 
     [Fact]
-    public async Task PathTraversal_ShouldDiagnosticA03003()
+    public async Task PathTraversal_ShouldDiagnosticA05003()
     {
         var code = """
             public static class File { public static string ReadAllText(string path) => ""; }
@@ -89,7 +89,7 @@ public class InjectionAnalyzerTests
             public class TestQuery { public string this[string key] => key; }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA03003");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA05003");
     }
 
     [Fact]
@@ -112,11 +112,11 @@ public class InjectionAnalyzerTests
             public class TestQuery { public string this[string key] => key; }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA03003");
+        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA05003");
     }
 
     [Fact]
-    public async Task LdapInjection_ShouldDiagnosticA03004()
+    public async Task LdapInjection_ShouldDiagnosticA05004()
     {
         var code = """
             public class DirectorySearcher
@@ -137,11 +137,11 @@ public class InjectionAnalyzerTests
             public class TestQuery { public string this[string key] => key; }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA03004");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA05004");
     }
 
     [Fact]
-    public async Task XssInjection_ShouldDiagnosticA03006()
+    public async Task XssInjection_ShouldDiagnosticA05006()
     {
         var code = """
             public class HttpResponse
@@ -162,11 +162,11 @@ public class InjectionAnalyzerTests
             public class TestQuery { public string this[string key] => key; }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA03006");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA05006");
     }
 
     [Fact]
-    public async Task XPathInjection_ShouldDiagnosticA03005()
+    public async Task XPathInjection_ShouldDiagnosticA05005()
     {
         var code = """
             public class XPathNavigator
@@ -187,11 +187,11 @@ public class InjectionAnalyzerTests
             public class TestQuery { public string this[string key] => key; }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA03005");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA05005");
     }
 
     [Fact]
-    public async Task OsCommandInjection_ShouldDiagnosticA03002()
+    public async Task OsCommandInjection_ShouldDiagnosticA05002()
     {
         var code = """
             public static class Process { public static void Start(string filename, string args = "") { } }
@@ -208,6 +208,6 @@ public class InjectionAnalyzerTests
             public class TestQuery { public string this[string key] => key; }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA03002");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA05002");
     }
 }

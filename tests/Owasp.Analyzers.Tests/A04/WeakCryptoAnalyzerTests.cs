@@ -1,13 +1,13 @@
-using Owasp.Analyzers.Analyzers.A02;
+using Owasp.Analyzers.Analyzers.A04;
 
-namespace Owasp.Analyzers.Tests.A02;
+namespace Owasp.Analyzers.Tests.A04;
 
 public class WeakCryptoAnalyzerTests
 {
     private readonly WeakCryptoAnalyzer _analyzer = new();
 
     [Fact]
-    public async Task MD5Create_ShouldDiagnosticA02001()
+    public async Task MD5Create_ShouldDiagnosticA04001()
     {
         var code = """
             public class C
@@ -19,11 +19,11 @@ public class WeakCryptoAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA02001");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA04001");
     }
 
     [Fact]
-    public async Task SHA1Create_ShouldDiagnosticA02001()
+    public async Task SHA1Create_ShouldDiagnosticA04001()
     {
         var code = """
             public class C
@@ -35,7 +35,7 @@ public class WeakCryptoAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA02001");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA04001");
     }
 
     [Fact]
@@ -51,11 +51,11 @@ public class WeakCryptoAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA02001");
+        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA04001");
     }
 
     [Fact]
-    public async Task EcbMode_ShouldDiagnosticA02002()
+    public async Task EcbMode_ShouldDiagnosticA04002()
     {
         var code = """
             public class C
@@ -67,7 +67,7 @@ public class WeakCryptoAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA02002");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA04002");
     }
 
     [Fact]
@@ -83,11 +83,11 @@ public class WeakCryptoAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA02002");
+        Assert.DoesNotContain(diagnostics, d => d.Id == "OWASPA04002");
     }
 
     [Fact]
-    public async Task NewRandom_ShouldDiagnosticA02003()
+    public async Task NewRandom_ShouldDiagnosticA04003()
     {
         var code = """
             public class C
@@ -99,11 +99,11 @@ public class WeakCryptoAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA02003");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA04003");
     }
 
     [Fact]
-    public async Task NewMD5CryptoServiceProvider_ShouldDiagnosticA02001()
+    public async Task NewMD5CryptoServiceProvider_ShouldDiagnosticA04001()
     {
         var code = """
             public class C
@@ -115,11 +115,11 @@ public class WeakCryptoAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA02001");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA04001");
     }
 
     [Fact]
-    public async Task NewSHA1Managed_ShouldDiagnosticA02001()
+    public async Task NewSHA1Managed_ShouldDiagnosticA04001()
     {
         var code = """
             public class C
@@ -131,6 +131,6 @@ public class WeakCryptoAnalyzerTests
             }
             """;
         var diagnostics = await AnalyzerTestHelper.GetDiagnosticsAsync(code, _analyzer);
-        Assert.Contains(diagnostics, d => d.Id == "OWASPA02001");
+        Assert.Contains(diagnostics, d => d.Id == "OWASPA04001");
     }
 }
