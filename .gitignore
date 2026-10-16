@@ -2,3 +2,6 @@ bin/
 obj/
 *.user
 .vs/
+
+# Screenshots and page snapshots the Playwright MCP server writes into the working directory.
+.playwright-mcp/
