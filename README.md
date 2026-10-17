@@ -2,6 +2,7 @@
 
 [![NuGet](https://img.shields.io/nuget/v/Owasp.Analyzers.svg)](https://www.nuget.org/packages/Owasp.Analyzers)
 [![CI](https://github.com/MarcelRoozekrans/Owasp.Analyzers/actions/workflows/ci.yml/badge.svg)](https://github.com/MarcelRoozekrans/Owasp.Analyzers/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/MarcelRoozekrans/Owasp.Analyzers/graph/badge.svg)](https://codecov.io/gh/MarcelRoozekrans/Owasp.Analyzers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![GitHub Sponsors](https://img.shields.io/github/sponsors/MarcelRoozekrans?style=flat&logo=githubsponsors&color=ea4aaa&label=Sponsor)](https://github.com/sponsors/MarcelRoozekrans)
 
