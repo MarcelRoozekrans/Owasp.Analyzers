@@ -41,6 +41,14 @@ jobs:
     if: ${{ needs.release-please.outputs.release_created || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     steps:
+      # The SBOM step at the end attaches to the release named by the tag. A manual run has no release-please tag and
+      # uses the ref it was dispatched from, so it must be a release tag. Check that first, before anything is pushed.
+      - name: Require a release tag on a manual run
+        if: ${{ github.event_name == 'workflow_dispatch' && github.ref_type != 'tag' }}
+        run: |
+          echo "::error::Dispatch a manual publish from a release tag such as v1.2.3, not from the branch ${GITHUB_REF_NAME}."
+          exit 1
+
       - uses: actions/checkout@v7
 
       - name: Setup .NET
