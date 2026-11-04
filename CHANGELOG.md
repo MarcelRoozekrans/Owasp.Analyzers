@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/MarcelRoozekrans/Owasp.Analyzers/compare/v2.1.0...v2.1.1) (2026-11-04)
+
+
+### Bug Fixes
+
+* **ci:** refuse a manual publish that was not dispatched from a release tag ([#103](https://github.com/MarcelRoozekrans/Owasp.Analyzers/issues/103)) ([ba0d338](https://github.com/MarcelRoozekrans/Owasp.Analyzers/commit/ba0d3385190000a2c05b0312f602f83729a99890))
+
 ## [2.1.0](https://github.com/MarcelRoozekrans/Owasp.Analyzers/compare/v2.0.0...v2.1.0) (2026-07-21)
 
 
