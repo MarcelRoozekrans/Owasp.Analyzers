@@ -66,3 +66,11 @@ jobs:
             --api-key ${{ secrets.NUGET_API_KEY }} \
             --source https://api.nuget.org/v3/index.json \
             --skip-duplicate
+
+      # A CycloneDX SBOM of the solution, attached to the release that release-please created in the job above.
+      # A manual run has no release-please tag, so it uses the ref it was dispatched from, which must be a release tag.
+      - name: Attach the SBOM to the GitHub release
+        uses: MarcelRoozekrans/ci-baseline/actions/sbom@v1
+        with:
+          solution: Owasp.Analyzers.slnx
+          tag: ${{ needs.release-please.outputs.tag_name || github.ref_name }}

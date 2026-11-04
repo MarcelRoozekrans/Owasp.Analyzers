@@ -7,6 +7,9 @@
     <RepositoryType>git</RepositoryType>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <NuGetAudit>true</NuGetAudit>
+    <NuGetAuditMode>all</NuGetAuditMode>
+    <NuGetAuditLevel>moderate</NuGetAuditLevel>
   </PropertyGroup>
   <PropertyGroup Condition="'$(IsPackable)' != 'false'">
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
