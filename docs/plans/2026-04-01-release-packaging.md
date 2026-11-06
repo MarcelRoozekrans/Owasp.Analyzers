@@ -400,10 +400,16 @@ jobs:
       - name: Pack
         run: dotnet pack src/Owasp.Analyzers/Owasp.Analyzers.csproj -c Release --no-build -o artifacts/
 
+      - name: Log in to NuGet
+        id: nuget-login
+        uses: NuGet/login@v1
+        with:
+          user: ${{ vars.NUGET_USER }}
+
       - name: Push to NuGet
         run: |
           dotnet nuget push artifacts/*.nupkg \
-            --api-key ${{ secrets.NUGET_API_KEY }} \
+            --api-key ${{ steps.nuget-login.outputs.NUGET_API_KEY }} \
             --source https://api.nuget.org/v3/index.json \
             --skip-duplicate
 ```
@@ -456,9 +462,9 @@ Expected output includes:
 - `analyzers/dotnet/cs/Owasp.Analyzers.dll`
 - `build/Owasp.Analyzers.targets`
 
-**Step 3: Confirm GitHub secret is set**
+**Step 3: Confirm NuGet trusted publishing is set up**
 
-In the GitHub repo → Settings → Secrets and variables → Actions, ensure `NUGET_API_KEY` is set. This is a manual step — create an API key at https://www.nuget.org/account/apikeys scoped to push the `Owasp.Analyzers` package.
+Publishing uses trusted publishing, not an API key secret. This is a manual step: on nuget.org add a trusted publishing policy for repository `MarcelRoozekrans/Owasp.Analyzers` and workflow file `release-please.yml` with no environment, and set the repository variable `NUGET_USER` to the nuget.org profile name.
 
 **Step 4: Push to `main` to trigger CI**
 

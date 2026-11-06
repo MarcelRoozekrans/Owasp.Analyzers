@@ -40,6 +40,9 @@ jobs:
     needs: release-please
     if: ${{ needs.release-please.outputs.release_created || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
     steps:
       # The SBOM step at the end attaches to the release named by the tag. A manual run has no release-please tag and
       # uses the ref it was dispatched from, so it must be a release tag. Check that first, before anything is pushed.
@@ -68,10 +71,19 @@ jobs:
       - name: Pack
         run: dotnet pack src/Owasp.Analyzers/Owasp.Analyzers.csproj -c Release --no-build -o artifacts/
 
+      # Trusted publishing: nuget.org holds a policy for this repository and workflow file, and NuGet/login swaps
+      # this job's OIDC token for an API key that lasts about an hour. NUGET_USER is the nuget.org profile name.
+      # The login sits directly before the push so the key is fresh. A manual run takes the same path.
+      - name: Log in to NuGet
+        id: nuget-login
+        uses: NuGet/login@v1
+        with:
+          user: ${{ vars.NUGET_USER }}
+
       - name: Push to NuGet
         run: |
           dotnet nuget push artifacts/*.nupkg \
-            --api-key ${{ secrets.NUGET_API_KEY }} \
+            --api-key ${{ steps.nuget-login.outputs.NUGET_API_KEY }} \
             --source https://api.nuget.org/v3/index.json \
             --skip-duplicate
 

@@ -58,7 +58,7 @@ Job 2 — **publish** (runs only when `release_created == true`):
 2. Setup .NET
 3. `dotnet build -c Release`
 4. `dotnet pack -c Release --no-build`
-5. `dotnet nuget push` with `NUGET_API_KEY` GitHub secret, skip duplicate versions
+5. `dotnet nuget push` with a short-lived key from `NuGet/login` (trusted publishing), skip duplicate versions
 
 ### Release-Please Config
 
@@ -78,11 +78,14 @@ Job 2 — **publish** (runs only when `release_created == true`):
 
 Release-Please updates `Version` in `Directory.Build.props` automatically on each release.
 
-### Required GitHub Secret
+### Required Configuration
 
-| Secret | Value |
-|--------|-------|
-| `NUGET_API_KEY` | NuGet.org API key for `Owasp.Analyzers` package |
+Publishing uses NuGet trusted publishing, so no API key secret is stored. Originally this was a `NUGET_API_KEY` secret.
+
+| Setting | Value |
+|---------|-------|
+| `NUGET_USER` (repository variable) | nuget.org profile name that owns the trusted publishing policy |
+| Trusted publishing policy (nuget.org) | Repository `MarcelRoozekrans/Owasp.Analyzers`, workflow file `release-please.yml`, no environment |
 
 ---
 
