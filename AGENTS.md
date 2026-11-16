@@ -58,9 +58,9 @@ dotnet test tests/Owasp.Analyzers.Tests -f net10.0 --filter "FullyQualifiedName~
   or `AnalyzerReleases.Shipped.md`, the rules table in `README.md`, and the matching page under
   `website/docs/rules/`. A missing release tracking entry only raises warning RS2000 from the
   Roslyn analyzers package, so the build stays green: check the files by hand. Renumbering is a
-  breaking change for consumers' `.editorconfig` overrides, as the 2.0.0 migration table in
+  breaking change for consumers' `.editorconfig` overrides, as the migration table in
   `README.md` shows. A03 is the exception: it lives only in the targets file, the README table and
-  its website page.
+  its website page. Issue #110 tracks the mismatch between the README table and the emitted codes.
 - Diagnostic IDs are `OWASPA<category><number>` and the category string is `OWASP.A<category>`.
 - Analyzers call `ConfigureGeneratedCodeAnalysis(None)` and `EnableConcurrentExecution()`. The
   project sets `EnforceExtendedAnalyzerRules`, which makes the Roslyn analyzer rules stricter for
