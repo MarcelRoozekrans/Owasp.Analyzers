@@ -17,8 +17,8 @@ file. Consumers use it to find security defects at compile time.
   .NET 11 runtime. Each test compiles a code string in memory through `AnalyzerTestHelper`.
 - `website/` is the Docusaurus docs site, deployed by `docs.yml` on changes under `website/**`. It is
   not part of the solution.
-- `artifacts/Owasp.Analyzers.1.0.0.nupkg` is a stale tracked file. Pack locally to another folder, for
-  example `-o /tmp/pack`, never to `artifacts/`: the publish job pushes `artifacts/*.nupkg`.
+- `artifacts/` is ignored. The publish job packs into it and pushes `artifacts/*.nupkg`, so pack
+  locally to another folder, for example `-o /tmp/pack`.
 
 ## Build and test
 
