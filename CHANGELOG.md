@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.2](https://github.com/MarcelRoozekrans/Owasp.Analyzers/compare/v2.1.1...v2.1.2) (2026-11-16)
+
+
+### Bug Fixes
+
+* embed PDBs so Go to Definition shows the package source ([6008093](https://github.com/MarcelRoozekrans/Owasp.Analyzers/commit/6008093b0c52191320e0472be0cf876829fbf93b))
+
 ## [2.1.1](https://github.com/MarcelRoozekrans/Owasp.Analyzers/compare/v2.1.0...v2.1.1) (2026-11-04)
 
 
