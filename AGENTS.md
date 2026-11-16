@@ -9,9 +9,11 @@ file. Consumers use it to find security defects at compile time.
 - `src/Owasp.Analyzers` is the only packable project. It targets `net10.0` and does not ship a
   library: `IncludeBuildOutput` is false and the analyzer DLL is packed into `analyzers/dotnet/cs`.
   `Analyzers/A01` to `A10` hold one analyzer class per OWASP category, `Taint/` the shared taint engine.
-- `build/Owasp.Analyzers.targets` ships in the package and runs in the consumer's build, not here. It
-  implements the A03 rules OWASPA03001 and OWASPA03002 with `dotnet list package`, so A03 has no
-  analyzer class and no unit tests. Opt-out is `OwaspA03Enabled`, and the old `OwaspA06Enabled` is
+- `src/Owasp.Analyzers/build/Owasp.Analyzers.targets` ships in the package and runs in the consumer's
+  build, not here. It implements A03 with `dotnet list package` and emits MSBuild warnings with the
+  codes `OWASP-A03-001` and `OWASP-A03-002`, not Roslyn IDs: the README table lists them as
+  OWASPA03001 and OWASPA03002, but `.editorconfig` severity settings do not reach them. A03 has no
+  analyzer class, no unit tests and no release tracking entry. Opt-out is `OwaspA03Enabled`, and the old `OwaspA06Enabled` is
   still honored.
 - `tests/Owasp.Analyzers.Tests` targets `net10.0` and `net11.0`, so it needs the .NET 10 and the
   .NET 11 runtime. Each test compiles a code string in memory through `AnalyzerTestHelper`.
@@ -55,8 +57,10 @@ dotnet test tests/Owasp.Analyzers.Tests -f net10.0 --filter "FullyQualifiedName~
   the `DiagnosticDescriptor` in `src/Owasp.Analyzers/Analyzers/`, `AnalyzerReleases.Unshipped.md`
   or `AnalyzerReleases.Shipped.md`, the rules table in `README.md`, and the matching page under
   `website/docs/rules/`. A missing release tracking entry only raises warning RS2000 from the
-  Roslyn analyzers package, so the build stays green: check the files by hand. Renumbering is a breaking change for consumers'
-  `.editorconfig` overrides, as the 2.0.0 migration table in `README.md` shows.
+  Roslyn analyzers package, so the build stays green: check the files by hand. Renumbering is a
+  breaking change for consumers' `.editorconfig` overrides, as the 2.0.0 migration table in
+  `README.md` shows. A03 is the exception: it lives only in the targets file, the README table and
+  its website page.
 - Diagnostic IDs are `OWASPA<category><number>` and the category string is `OWASP.A<category>`.
 - Analyzers call `ConfigureGeneratedCodeAnalysis(None)` and `EnableConcurrentExecution()`. The
   project sets `EnforceExtendedAnalyzerRules`, which makes the Roslyn analyzer rules stricter for
