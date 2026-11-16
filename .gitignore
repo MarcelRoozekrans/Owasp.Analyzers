@@ -8,3 +8,6 @@ obj/
 
 # Test results and coverage reports
 TestResults/
+
+# Local and CI package output
+artifacts/
